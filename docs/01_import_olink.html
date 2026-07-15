@@ -1,0 +1,2998 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Olink data import</title>
+
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">olink-analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Olink data import</h1>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-07-15
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>olink-analysis/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260713code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20260713)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20260713code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20260713)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong4612c15">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong> 4612c15
+</a>
+</p>
+</div>
+<div id="strongRepositoryversionstrong4612c15"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version 4612c15.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/figure/
+
+Untracked files:
+    Untracked:  analysis/Proteomics_combined_final (2).Rmd
+    Untracked:  analysis/output/
+    Untracked:  data/Reveal_Fixed_LOD.csv
+    Untracked:  data/pre_quant.csv
+    Untracked:  output/npx_selected_qc.rds
+    Untracked:  output/npx_selected_with_lod_qc.rds
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/01_import_olink.Rmd</code>) and
+HTML (<code>docs/01_import_olink.html</code>) files. If you’ve
+configured a remote Git repository (see <code>?wflow_git_remote</code>),
+click on the hyperlinks in the table below to view the files as they
+were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+4612c15
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+<td>
+Publish Olink data import
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-packages" class="section level1">
+<h1>Load packages</h1>
+<pre class="r"><code>library(workflowr)
+library(OlinkAnalyze)
+library(tidyverse)</code></pre>
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<pre class="r"><code>library(here)</code></pre>
+<pre><code>here() starts at C:/Users/Ellen/OneDrive/Dokumente/olink-analysis</code></pre>
+<pre class="r"><code>set.seed(123)</code></pre>
+</div>
+<div id="define-the-input-file" class="section level1">
+<h1>Define the input file</h1>
+<pre class="r"><code>#telling here where the report sits
+here::i_am(&quot;analysis/01_import_olink.Rmd&quot;)</code></pre>
+<pre><code>here() starts at C:/Users/Ellen/OneDrive/Dokumente/olink-analysis</code></pre>
+<pre class="r"><code>data_file &lt;- here::here(&quot;data&quot;, &quot;pre_quant.csv&quot;)
+
+file.exists(data_file)</code></pre>
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div id="import-the-olink-data" class="section level1">
+<h1>Import the Olink data</h1>
+<pre class="r"><code>npx_raw &lt;- OlinkAnalyze::read_npx(
+  filename = data_file,
+  out_df = &quot;tibble&quot;,
+  long_format = TRUE,
+  olink_platform = &quot;Reveal&quot;,
+  data_type = &quot;NPX&quot;,
+  quiet = FALSE
+)</code></pre>
+<pre><code>Detected data in long format!</code></pre>
+</div>
+<div id="inspect-the-imported-data" class="section level1">
+<h1>Inspect the imported data</h1>
+<pre class="r"><code>#dataset dimensions
+dim(npx_raw)</code></pre>
+<pre><code>[1] 99264    35</code></pre>
+<pre class="r"><code>#columns, types, and examples values
+dplyr::glimpse(npx_raw)</code></pre>
+<pre><code>Rows: 99,264
+Columns: 35
+$ SampleID                &lt;chr&gt; &quot;EX2_Con2_TGF&quot;, &quot;EX2_Con1_NC&quot;, &quot;CZD12_CTO_ME&quot;,…
+$ SampleType              &lt;chr&gt; &quot;SAMPLE&quot;, &quot;SAMPLE&quot;, &quot;SAMPLE&quot;, &quot;SAMPLE&quot;, &quot;SAMPL…
+$ WellID                  &lt;chr&gt; &quot;A1&quot;, &quot;A2&quot;, &quot;A3&quot;, &quot;A4&quot;, &quot;A5&quot;, &quot;A6&quot;, &quot;A7&quot;, &quot;A8&quot;…
+$ PlateID                 &lt;chr&gt; &quot;plate1&quot;, &quot;plate1&quot;, &quot;plate1&quot;, &quot;plate1&quot;, &quot;plate…
+$ DataAnalysisRefID       &lt;chr&gt; &quot;R10002&quot;, &quot;R10002&quot;, &quot;R10002&quot;, &quot;R10002&quot;, &quot;R1000…
+$ OlinkID                 &lt;chr&gt; &quot;OID50348&quot;, &quot;OID50348&quot;, &quot;OID50348&quot;, &quot;OID50348&quot;…
+$ UniProt                 &lt;chr&gt; &quot;Q7Z7G0&quot;, &quot;Q7Z7G0&quot;, &quot;Q7Z7G0&quot;, &quot;Q7Z7G0&quot;, &quot;Q7Z7G…
+$ Assay                   &lt;chr&gt; &quot;ABI3BP&quot;, &quot;ABI3BP&quot;, &quot;ABI3BP&quot;, &quot;ABI3BP&quot;, &quot;ABI3B…
+$ AssayType               &lt;chr&gt; &quot;assay&quot;, &quot;assay&quot;, &quot;assay&quot;, &quot;assay&quot;, &quot;assay&quot;, &quot;…
+$ Panel                   &lt;chr&gt; &quot;Reveal&quot;, &quot;Reveal&quot;, &quot;Reveal&quot;, &quot;Reveal&quot;, &quot;Revea…
+$ Block                   &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…
+$ Count                   &lt;int&gt; 4549, 4792, 496203, 28694, 3807, 78277, 3164, …
+$ ExtNPX                  &lt;dbl&gt; -3.5495937, -3.5358400, 4.7529960, -0.1054564,…
+$ NPX                     &lt;dbl&gt; -1.0009055, -0.9871520, 7.3016839, 2.4432318, …
+$ Normalization           &lt;chr&gt; &quot;Intensity&quot;, &quot;Intensity&quot;, &quot;Intensity&quot;, &quot;Intens…
+$ PCNormalizedNPX         &lt;dbl&gt; -3.8269532, -3.8131998, 4.4756365, -0.3828160,…
+$ AssayQC                 &lt;chr&gt; &quot;PASS&quot;, &quot;PASS&quot;, &quot;PASS&quot;, &quot;PASS&quot;, &quot;PASS&quot;, &quot;PASS&quot;…
+$ SampleQC                &lt;chr&gt; &quot;PASS&quot;, &quot;PASS&quot;, &quot;PASS&quot;, &quot;PASS&quot;, &quot;PASS&quot;, &quot;PASS&quot;…
+$ SoftwareVersion         &lt;chr&gt; &quot;01.03.2000&quot;, &quot;01.03.2000&quot;, &quot;01.03.2000&quot;, &quot;01.…
+$ SoftwareName            &lt;chr&gt; &quot;NPX Map CLI&quot;, &quot;NPX Map CLI&quot;, &quot;NPX Map CLI&quot;, &quot;…
+$ PanelDataArchiveVersion &lt;chr&gt; &quot;01.03.2000&quot;, &quot;01.03.2000&quot;, &quot;01.03.2000&quot;, &quot;01.…
+$ PreProcessingVersion    &lt;chr&gt; &quot;06.02.2000&quot;, &quot;06.02.2000&quot;, &quot;06.02.2000&quot;, &quot;06.…
+$ PreProcessingSoftware   &lt;chr&gt; &quot;ngs2counts&quot;, &quot;ngs2counts&quot;, &quot;ngs2counts&quot;, &quot;ngs…
+$ InstrumentType          &lt;chr&gt; &quot;Illumina NovaSeq X Plus&quot;, &quot;Illumina NovaSeq X…
+$ Group_Name1             &lt;chr&gt; &quot;MT_TGF&quot;, &quot;MT_C&quot;, NA, NA, NA, NA, NA, NA, NA, …
+$ Group_Name2             &lt;chr&gt; &quot;MT_TGF&quot;, NA, NA, NA, &quot;MT_TGF_HMC&quot;, NA, NA, NA…
+$ Group_Name3             &lt;chr&gt; NA, &quot;MT_C&quot;, NA, NA, NA, NA, &quot;MT_C_HMC&quot;, NA, &quot;M…
+$ Group_Name4             &lt;chr&gt; NA, NA, NA, NA, NA, NA, &quot;MT_C_HMC&quot;, NA, &quot;MT_C_…
+$ Group_Name5             &lt;chr&gt; NA, NA, NA, NA, &quot;MT_TGF_HMC&quot;, NA, &quot;MT_C_HMC&quot;, …
+$ Group_Name6             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, &quot;S…
+$ Group_Name7             &lt;chr&gt; NA, NA, NA, NA, &quot;MT_TGF_HMC&quot;, NA, NA, NA, NA, …
+$ Group_Name8             &lt;chr&gt; NA, NA, NA, &quot;HF_Fib_CM&quot;, NA, &quot;HF_Fib_CM&quot;, NA, …
+$ Group_Name9             &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, &quot;S…
+$ Group_Name10            &lt;chr&gt; NA, NA, &quot;CZD_CTO&quot;, NA, NA, NA, NA, NA, NA, NA,…
+$ Group_Name11            &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, &quot;S…</code></pre>
+</div>
+<div id="dataset-summary" class="section level1">
+<h1>Dataset summary</h1>
+<pre class="r"><code>#summarizes the dataset, e.g. how many samples, how many controls etc. 
+dataset_summary &lt;- npx_raw |&gt;
+  dplyr::summarise(
+    rows = dplyr::n(),
+
+    sample_ids = dplyr::n_distinct(SampleID),
+
+    biological_samples = dplyr::n_distinct(
+      SampleID[SampleType == &quot;SAMPLE&quot;]
+    ),
+
+    assays = dplyr::n_distinct(OlinkID),
+
+    assay_names = dplyr::n_distinct(Assay),
+
+    plates = dplyr::n_distinct(PlateID),
+
+    panels = dplyr::n_distinct(Panel),
+
+    data_analysis_reference_ids =
+      dplyr::n_distinct(DataAnalysisRefID)
+  )
+
+dataset_summary</code></pre>
+<pre><code># A tibble: 1 × 8
+   rows sample_ids biological_samples assays assay_names plates panels
+  &lt;int&gt;      &lt;int&gt;              &lt;int&gt;  &lt;int&gt;       &lt;int&gt;  &lt;int&gt;  &lt;int&gt;
+1 99264         96                 86   1034        1034      1      1
+# ℹ 1 more variable: data_analysis_reference_ids &lt;int&gt;</code></pre>
+<pre class="r"><code>#check what the dataset looks like 
+npx_raw |&gt;
+  dplyr::select(
+    SampleID,
+    SampleType,
+    PlateID,
+    OlinkID,
+    Assay,
+    AssayType,
+    NPX,
+    Count,
+    AssayQC,
+    SampleQC,
+    DataAnalysisRefID
+  ) |&gt;
+  dplyr::slice_head(n = 10)</code></pre>
+<pre><code># A tibble: 10 × 11
+   SampleID     SampleType PlateID OlinkID Assay AssayType    NPX  Count AssayQC
+   &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;int&gt; &lt;chr&gt;  
+ 1 EX2_Con2_TGF SAMPLE     plate1  OID503… ABI3… assay     -1.00    4549 PASS   
+ 2 EX2_Con1_NC  SAMPLE     plate1  OID503… ABI3… assay     -0.987   4792 PASS   
+ 3 CZD12_CTO_ME SAMPLE     plate1  OID503… ABI3… assay      7.30  496203 PASS   
+ 4 HT27_Fib_CM  SAMPLE     plate1  OID503… ABI3… assay      2.44   28694 PASS   
+ 5 EX3_H1_TGF   SAMPLE     plate1  OID503… ABI3… assay     -1.37    3807 PASS   
+ 6 LV47_Fib_CM  SAMPLE     plate1  OID503… ABI3… assay      4.08   78277 PASS   
+ 7 EX1_H_NC     SAMPLE     plate1  OID503… ABI3… assay     -1.46    3164 PASS   
+ 8 Fib_Medium   SAMPLE     plate1  OID503… ABI3… assay     -1.36    3716 PASS   
+ 9 EX3_H1_NC    SAMPLE     plate1  OID503… ABI3… assay     -1.90    2614 PASS   
+10 LV69_Fib_CM  SAMPLE     plate1  OID503… ABI3… assay      1.15   16329 PASS   
+# ℹ 2 more variables: SampleQC &lt;chr&gt;, DataAnalysisRefID &lt;chr&gt;</code></pre>
+<pre class="r"><code>#check that in the datafile we have no NAs where we don&#39;t want them etc. 
+npx_check &lt;- OlinkAnalyze::check_npx(
+  df = npx_raw
+)</code></pre>
+<pre><code>ℹ  More than one column names in `df` was associated with certain key. One was
+  selected based on an ordered list:
+* &quot;quant&quot;: &quot;NPX&quot; was selected. Options were &quot;NPX&quot; or &quot;PCNormalizedNPX&quot;.
+Please use `preferred_names` to select a different column name.
+duckdb is keeping downloaded extensions in a temporary directory:
+ℹ C:\Users\Ellen\AppData\Local\Temp\RtmpuYU8Ex/duckdb/extensions
+This is removed when the R session ends, so extensions are re-downloaded each session.
+ℹ To keep them, point `options(duckdb.extension_directory =)` or the `DUCKDB_EXTENSION_DIRECTORY` environment variable at a permanent path.
+1 assay exhibited assay QC warnings in column `AssayQC` of the dataset:
+&quot;OID50794&quot;.
+ℹ Consider running `clean_npx()` next!</code></pre>
+<pre class="r"><code>npx_check</code></pre>
+<pre><code>$col_names
+$col_names$sample_id
+[1] &quot;SampleID&quot;
+
+$col_names$sample_type
+[1] &quot;SampleType&quot;
+
+$col_names$assay_type
+[1] &quot;AssayType&quot;
+
+$col_names$olink_id
+[1] &quot;OlinkID&quot;
+
+$col_names$uniprot
+[1] &quot;UniProt&quot;
+
+$col_names$assay
+[1] &quot;Assay&quot;
+
+$col_names$panel
+[1] &quot;Panel&quot;
+
+$col_names$block
+[1] &quot;Block&quot;
+
+$col_names$plate_id
+[1] &quot;PlateID&quot;
+
+$col_names$panel_version
+[1] &quot;DataAnalysisRefID&quot;
+
+$col_names$quant
+[1] &quot;NPX&quot;
+
+$col_names$ext_npx
+[1] &quot;ExtNPX&quot;
+
+$col_names$count
+[1] &quot;Count&quot;
+
+$col_names$qc_warning
+[1] &quot;SampleQC&quot;
+
+$col_names$assay_warn
+[1] &quot;AssayQC&quot;
+
+$col_names$normalization
+[1] &quot;Normalization&quot;
+
+$col_names$qc_version
+[1] &quot;PanelDataArchiveVersion&quot;
+
+
+$oid_invalid
+character(0)
+
+$assay_na
+character(0)
+
+$sample_id_dups
+character(0)
+
+$sample_id_na
+character(0)
+
+$col_class
+# A tibble: 0 × 4
+# ℹ 4 variables: col_name &lt;chr&gt;, col_class &lt;chr&gt;, col_key &lt;chr&gt;,
+#   expected_col_class &lt;chr&gt;
+
+$assay_qc
+[1] &quot;OID50794&quot;
+
+$non_unique_uniprot
+character(0)
+
+$darid_invalid
+# A tibble: 0 × 2
+# ℹ 2 variables: DataAnalysisRefID &lt;chr&gt;, PanelDataArchiveVersion &lt;chr&gt;</code></pre>
+<pre class="r"><code>npx_raw |&gt;
+  dplyr::filter(OlinkID == &quot;OID50794&quot;) |&gt;
+  dplyr::count(Assay, AssayQC)</code></pre>
+<pre><code># A tibble: 1 × 3
+  Assay AssayQC     n
+  &lt;chr&gt; &lt;chr&gt;   &lt;int&gt;
+1 NPM1  WARN       96</code></pre>
+<pre class="r"><code>npx_raw |&gt;
+  dplyr::filter(
+    OlinkID == &quot;OID50794&quot;,
+    is.na(AssayQC) | AssayQC != &quot;PASS&quot;
+  ) |&gt;
+  dplyr::select(
+    SampleID,
+    PlateID,
+    OlinkID,
+    Assay,
+    NPX,
+    AssayQC,
+    SampleQC
+  )</code></pre>
+<pre><code># A tibble: 96 × 7
+   SampleID     PlateID OlinkID  Assay      NPX AssayQC SampleQC
+   &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   
+ 1 EX2_Con2_TGF plate1  OID50794 NPM1   0.00788 WARN    PASS    
+ 2 EX2_Con1_NC  plate1  OID50794 NPM1   0.330   WARN    PASS    
+ 3 CZD12_CTO_ME plate1  OID50794 NPM1   2.22    WARN    PASS    
+ 4 HT27_Fib_CM  plate1  OID50794 NPM1  -0.147   WARN    PASS    
+ 5 EX3_H1_TGF   plate1  OID50794 NPM1  -0.695   WARN    PASS    
+ 6 LV47_Fib_CM  plate1  OID50794 NPM1  -0.0259  WARN    PASS    
+ 7 EX1_H_NC     plate1  OID50794 NPM1  -0.990   WARN    PASS    
+ 8 Fib_Medium   plate1  OID50794 NPM1  -1.31    WARN    PASS    
+ 9 EX3_H1_NC    plate1  OID50794 NPM1  -1.13    WARN    PASS    
+10 LV69_Fib_CM  plate1  OID50794 NPM1  -0.349   WARN    PASS    
+# ℹ 86 more rows</code></pre>
+</div>
+<div id="identify-samples-above-and-below-lod" class="section level1">
+<h1>Identify Samples above and below LOD</h1>
+<div id="prepare-and-validate-the-fixed-lod-reference"
+class="section level2">
+<h2>prepare and validate the Fixed LOD reference</h2>
+<pre class="r"><code>lod_file &lt;- here::here(
+  &quot;data&quot;,
+  &quot;Reveal_Fixed_LOD.csv&quot;
+)
+
+
+lod_file</code></pre>
+<pre><code>[1] &quot;C:/Users/Ellen/OneDrive/Dokumente/olink-analysis/data/Reveal_Fixed_LOD.csv&quot;</code></pre>
+<pre class="r"><code>file.exists(lod_file)</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code># this file will be used as a reference for the LODs later on
+fixed_lod &lt;- readr::read_delim(
+  file = lod_file,
+  delim = &quot;;&quot;,
+  locale = readr::locale(decimal_mark = &quot;.&quot;),
+  trim_ws = TRUE,
+  show_col_types = FALSE
+)
+
+
+# Basic import checks
+
+dim(fixed_lod)</code></pre>
+<pre><code>[1] 3102   12</code></pre>
+<pre class="r"><code>dplyr::glimpse(fixed_lod)</code></pre>
+<pre><code>Rows: 3,102
+Columns: 12
+$ OlinkID             &lt;chr&gt; &quot;OID50004&quot;, &quot;OID50005&quot;, &quot;OID50006&quot;, &quot;OID50007&quot;, &quot;O…
+$ AssayType           &lt;chr&gt; &quot;assay&quot;, &quot;assay&quot;, &quot;assay&quot;, &quot;assay&quot;, &quot;assay&quot;, &quot;assa…
+$ UniProt             &lt;chr&gt; &quot;P24385&quot;, &quot;Q8N2Z9&quot;, &quot;P11308&quot;, &quot;Q9UI08&quot;, &quot;Q9UH90&quot;, …
+$ Assay               &lt;chr&gt; &quot;CCND1&quot;, &quot;CENPS&quot;, &quot;ERG&quot;, &quot;EVL&quot;, &quot;FBXO40&quot;, &quot;GSDMD&quot;,…
+$ Panel               &lt;chr&gt; &quot;Reveal&quot;, &quot;Reveal&quot;, &quot;Reveal&quot;, &quot;Reveal&quot;, &quot;Reveal&quot;, …
+$ Block               &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…
+$ DataAnalysisRefID   &lt;chr&gt; &quot;R10001&quot;, &quot;R10001&quot;, &quot;R10001&quot;, &quot;R10001&quot;, &quot;R10001&quot;, …
+$ BimodalDistribution &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…
+$ LODNPX              &lt;dbl&gt; -0.164366771, -0.590656917, -1.727214652, -2.79347…
+$ LODCount            &lt;dbl&gt; 2154, 1034, 658, 522, 20978, 540, 3474, 1524, 1224…
+$ LODMethod           &lt;chr&gt; &quot;lod_npx&quot;, &quot;lod_npx&quot;, &quot;lod_npx&quot;, &quot;lod_npx&quot;, &quot;lod_n…
+$ Version             &lt;chr&gt; &quot;10.0.0&quot;, &quot;10.0.0&quot;, &quot;10.0.0&quot;, &quot;10.0.0&quot;, &quot;10.0.0&quot;, …</code></pre>
+<pre class="r"><code>readr::problems(fixed_lod)</code></pre>
+<pre><code># A tibble: 0 × 5
+# ℹ 5 variables: row &lt;int&gt;, col &lt;int&gt;, expected &lt;chr&gt;, actual &lt;chr&gt;, file &lt;chr&gt;</code></pre>
+</div>
+<div id="identify-the-required-reference-ids-for-my-dataset"
+class="section level2">
+<h2>identify the required reference IDs for my dataset</h2>
+<pre class="r"><code>required_reference_ids &lt;- sort(
+  unique(npx_raw$DataAnalysisRefID)
+)
+
+required_reference_ids</code></pre>
+<pre><code>[1] &quot;R10002&quot;</code></pre>
+<pre class="r"><code># Keep only the Fixed LOD definitions that apply to this project
+fixed_lod_project &lt;- fixed_lod |&gt;
+  dplyr::filter(
+    DataAnalysisRefID %in% required_reference_ids,
+    AssayType == &quot;assay&quot;
+  )
+
+#check which reference IDs were matched and how many assays use each LOD method
+fixed_lod_project |&gt;
+  dplyr::count(
+    DataAnalysisRefID,
+    LODMethod
+  )</code></pre>
+<pre><code># A tibble: 2 × 3
+  DataAnalysisRefID LODMethod     n
+  &lt;chr&gt;             &lt;chr&gt;     &lt;int&gt;
+1 R10002            lod_count   121
+2 R10002            lod_npx     913</code></pre>
+<pre class="r"><code>fixed_lod_project |&gt;
+  dplyr::count(LODMethod)</code></pre>
+<pre><code># A tibble: 2 × 2
+  LODMethod     n
+  &lt;chr&gt;     &lt;int&gt;
+1 lod_count   121
+2 lod_npx     913</code></pre>
+<pre class="r"><code># Only these two methods are expected
+
+unexpected_lod_methods &lt;- setdiff(
+  unique(fixed_lod_project$LODMethod),
+  c(&quot;lod_npx&quot;, &quot;lod_count&quot;)
+)
+
+if (length(unexpected_lod_methods) &gt; 0) {
+  stop(
+    &quot;Unexpected LOD method(s): &quot;,
+    paste(unexpected_lod_methods, collapse = &quot;, &quot;)
+  )
+}</code></pre>
+</div>
+<div id="check-the-fixed-lod-table-for-duplicates-and-missing-values"
+class="section level2">
+<h2>check the Fixed LOD table for duplicates and missing values</h2>
+<pre class="r"><code>#define the LOD key
+lod_key &lt;- c(
+  &quot;OlinkID&quot;,
+  &quot;DataAnalysisRefID&quot;
+)
+
+
+# Check for duplicate Fixed LOD definitions (important so that we don&#39;t create mismatches) -&gt; result must be empty before proceeding, otherwise we have one sample-assay row with more than one LOD definition
+
+duplicate_lod_definitions &lt;- fixed_lod_project |&gt;
+  dplyr::count(
+    dplyr::across(
+      dplyr::all_of(lod_key)
+    ),
+    name = &quot;number_of_definitions&quot;
+  ) |&gt;
+  dplyr::filter(
+    number_of_definitions &gt; 1
+  )
+
+duplicate_lod_definitions</code></pre>
+<pre><code># A tibble: 0 × 3
+# ℹ 3 variables: OlinkID &lt;chr&gt;, DataAnalysisRefID &lt;chr&gt;,
+#   number_of_definitions &lt;int&gt;</code></pre>
+<pre class="r"><code>if (nrow(duplicate_lod_definitions) &gt; 0) {
+  stop(&quot;Duplicate assay definitions were found in the Fixed LOD table.&quot;)
+}
+
+
+# Check whether every assay in the NPX data has an LOD definition
+missing_lod_definitions &lt;- npx_raw |&gt;
+  dplyr::filter(
+    AssayType == &quot;assay&quot;
+  ) |&gt;
+  dplyr::distinct(
+    dplyr::across(
+      dplyr::all_of(lod_key)
+    )
+  ) |&gt;
+  dplyr::anti_join(
+    fixed_lod_project |&gt;
+      dplyr::distinct(
+        dplyr::across(
+          dplyr::all_of(lod_key)
+        )
+      ),
+    by = lod_key
+  )
+
+missing_lod_definitions</code></pre>
+<pre><code># A tibble: 0 × 2
+# ℹ 2 variables: OlinkID &lt;chr&gt;, DataAnalysisRefID &lt;chr&gt;</code></pre>
+<pre class="r"><code>if (nrow(missing_lod_definitions) &gt; 0) {
+  stop(&quot;Some assays do not have a matching Fixed LOD definition.&quot;)
+}
+
+#confirm that the threshold has a value and not an NA
+invalid_lod_definitions &lt;- fixed_lod_project |&gt;
+  dplyr::filter(
+    !LODMethod %in% c(&quot;lod_npx&quot;, &quot;lod_count&quot;) |
+
+      (LODMethod == &quot;lod_npx&quot; &amp;
+         is.na(LODNPX)) |
+
+      (LODMethod == &quot;lod_count&quot; &amp;
+         (is.na(LODCount) | LODCount &lt;= 0))
+  ) |&gt;
+  dplyr::select(
+    OlinkID,
+    DataAnalysisRefID,
+    Assay,
+    LODMethod,
+    LODNPX,
+    LODCount
+  )
+
+invalid_lod_definitions</code></pre>
+<pre><code># A tibble: 0 × 6
+# ℹ 6 variables: OlinkID &lt;chr&gt;, DataAnalysisRefID &lt;chr&gt;, Assay &lt;chr&gt;,
+#   LODMethod &lt;chr&gt;, LODNPX &lt;dbl&gt;, LODCount &lt;dbl&gt;</code></pre>
+<pre class="r"><code>#we are checking in three things in this chunk, all three generated tables should be empty (duplicate_lod_definitions, missing_lod_definitions, and invalid_lod_definitions)</code></pre>
+</div>
+<div id="set-which-quantitative-column-should-be-used"
+class="section level2">
+<h2>set which quantitative column should be used</h2>
+<pre class="r"><code># Explicitly select NPX as the primary quantitative column
+
+npx_check &lt;- OlinkAnalyze::check_npx(
+  df = npx_raw,
+  preferred_names = c(&quot;quant&quot; = &quot;NPX&quot;)
+)</code></pre>
+<pre><code>1 assay exhibited assay QC warnings in column `AssayQC` of the dataset:
+&quot;OID50794&quot;.
+ℹ Consider running `clean_npx()` next!</code></pre>
+<pre class="r"><code>npx_check</code></pre>
+<pre><code>$col_names
+$col_names$sample_id
+[1] &quot;SampleID&quot;
+
+$col_names$sample_type
+[1] &quot;SampleType&quot;
+
+$col_names$assay_type
+[1] &quot;AssayType&quot;
+
+$col_names$olink_id
+[1] &quot;OlinkID&quot;
+
+$col_names$uniprot
+[1] &quot;UniProt&quot;
+
+$col_names$assay
+[1] &quot;Assay&quot;
+
+$col_names$panel
+[1] &quot;Panel&quot;
+
+$col_names$block
+[1] &quot;Block&quot;
+
+$col_names$plate_id
+[1] &quot;PlateID&quot;
+
+$col_names$panel_version
+[1] &quot;DataAnalysisRefID&quot;
+
+$col_names$quant
+[1] &quot;NPX&quot;
+
+$col_names$ext_npx
+[1] &quot;ExtNPX&quot;
+
+$col_names$count
+[1] &quot;Count&quot;
+
+$col_names$qc_warning
+[1] &quot;SampleQC&quot;
+
+$col_names$assay_warn
+[1] &quot;AssayQC&quot;
+
+$col_names$normalization
+[1] &quot;Normalization&quot;
+
+$col_names$qc_version
+[1] &quot;PanelDataArchiveVersion&quot;
+
+
+$oid_invalid
+character(0)
+
+$assay_na
+character(0)
+
+$sample_id_dups
+character(0)
+
+$sample_id_na
+character(0)
+
+$col_class
+# A tibble: 0 × 4
+# ℹ 4 variables: col_name &lt;chr&gt;, col_class &lt;chr&gt;, col_key &lt;chr&gt;,
+#   expected_col_class &lt;chr&gt;
+
+$assay_qc
+[1] &quot;OID50794&quot;
+
+$non_unique_uniprot
+character(0)
+
+$darid_invalid
+# A tibble: 0 × 2
+# ℹ 2 variables: DataAnalysisRefID &lt;chr&gt;, PanelDataArchiveVersion &lt;chr&gt;</code></pre>
+</div>
+<div id="prepare-the-full-dataset-for-lod-integration"
+class="section level2">
+<h2>prepare the full dataset for LOD integration</h2>
+<pre class="r"><code># Keep control samples, control assays, assay warnings and sample warnings.
+# These should not be removed before olink_lod() is run.
+# olink specifically recommends running clean_npx() befrore LOD integration
+
+npx_pre_lod &lt;- OlinkAnalyze::clean_npx(
+  df = npx_raw,
+  check_log = npx_check,
+  remove_control_assay = FALSE,
+  remove_control_sample = FALSE,
+  remove_assay_warning = FALSE,
+  remove_qc_warning = FALSE
+)
+
+
+# Confirm that the expected rows remain
+tibble::tibble(
+  dataset = c(
+    &quot;Imported data&quot;,
+    &quot;Pre-LOD cleaned data&quot;
+  ),
+  rows = c(
+    nrow(npx_raw),
+    nrow(npx_pre_lod)
+  ),
+  columns = c(
+    ncol(npx_raw),
+    ncol(npx_pre_lod)
+  )
+)</code></pre>
+<pre><code># A tibble: 2 × 3
+  dataset               rows columns
+  &lt;chr&gt;                &lt;int&gt;   &lt;int&gt;
+1 Imported data        99264      35
+2 Pre-LOD cleaned data 99264      35</code></pre>
+<pre class="r"><code># Generate a check log for the exact object supplied to olink_lod(). This might seem redundant because we already checked twice with check_npx but check again right before olink_lod to be sure that nothing changed while running the other functions.olink specifically recommends to run check_npx again after cleaning!
+
+npx_pre_lod_check &lt;- OlinkAnalyze::check_npx(
+  df = npx_pre_lod,
+  preferred_names = c(&quot;quant&quot; = &quot;NPX&quot;)
+)</code></pre>
+<pre><code>1 assay exhibited assay QC warnings in column `AssayQC` of the dataset:
+&quot;OID50794&quot;.
+ℹ Consider running `clean_npx()` next!</code></pre>
+<pre class="r"><code>npx_pre_lod_check</code></pre>
+<pre><code>$col_names
+$col_names$sample_id
+[1] &quot;SampleID&quot;
+
+$col_names$sample_type
+[1] &quot;SampleType&quot;
+
+$col_names$assay_type
+[1] &quot;AssayType&quot;
+
+$col_names$olink_id
+[1] &quot;OlinkID&quot;
+
+$col_names$uniprot
+[1] &quot;UniProt&quot;
+
+$col_names$assay
+[1] &quot;Assay&quot;
+
+$col_names$panel
+[1] &quot;Panel&quot;
+
+$col_names$block
+[1] &quot;Block&quot;
+
+$col_names$plate_id
+[1] &quot;PlateID&quot;
+
+$col_names$panel_version
+[1] &quot;DataAnalysisRefID&quot;
+
+$col_names$quant
+[1] &quot;NPX&quot;
+
+$col_names$ext_npx
+[1] &quot;ExtNPX&quot;
+
+$col_names$count
+[1] &quot;Count&quot;
+
+$col_names$qc_warning
+[1] &quot;SampleQC&quot;
+
+$col_names$assay_warn
+[1] &quot;AssayQC&quot;
+
+$col_names$normalization
+[1] &quot;Normalization&quot;
+
+$col_names$qc_version
+[1] &quot;PanelDataArchiveVersion&quot;
+
+
+$oid_invalid
+character(0)
+
+$assay_na
+character(0)
+
+$sample_id_dups
+character(0)
+
+$sample_id_na
+character(0)
+
+$col_class
+# A tibble: 0 × 4
+# ℹ 4 variables: col_name &lt;chr&gt;, col_class &lt;chr&gt;, col_key &lt;chr&gt;,
+#   expected_col_class &lt;chr&gt;
+
+$assay_qc
+[1] &quot;OID50794&quot;
+
+$non_unique_uniprot
+character(0)
+
+$darid_invalid
+# A tibble: 0 × 2
+# ℹ 2 variables: DataAnalysisRefID &lt;chr&gt;, PanelDataArchiveVersion &lt;chr&gt;</code></pre>
+</div>
+<div id="run-the-fixed-lod-integration" class="section level2">
+<h2>run the Fixed LOD integration</h2>
+<pre class="r"><code>#this line actually runs the lod
+npx_with_lod &lt;- OlinkAnalyze::olink_lod(
+  data = npx_pre_lod,
+  lod_method = &quot;FixedLOD&quot;,
+  lod_file_path = lod_file,
+  check_log = npx_pre_lod_check
+)
+
+
+# Confirm that olink_lod() retained the rows and added the expected columns.
+
+tibble::tibble(
+  dataset = c(
+    &quot;Before LOD integration&quot;,
+    &quot;After LOD integration&quot;
+  ),
+  rows = c(
+    nrow(npx_pre_lod),
+    nrow(npx_with_lod)
+  ),
+  columns = c(
+    ncol(npx_pre_lod),
+    ncol(npx_with_lod)
+  )
+)</code></pre>
+<pre><code># A tibble: 2 × 3
+  dataset                 rows columns
+  &lt;chr&gt;                  &lt;int&gt;   &lt;int&gt;
+1 Before LOD integration 99264      35
+2 After LOD integration  99264      37</code></pre>
+<pre class="r"><code># This should return character(0).
+
+setdiff(
+  c(&quot;LOD&quot;, &quot;PCNormalizedLOD&quot;),
+  names(npx_with_lod)
+)</code></pre>
+<pre><code>character(0)</code></pre>
+<pre class="r"><code># Inspect which normalization is represented in the dataset.
+
+npx_with_lod |&gt;
+  dplyr::count(
+    Normalization
+  )</code></pre>
+<pre><code># A tibble: 1 × 2
+  Normalization     n
+  &lt;chr&gt;         &lt;int&gt;
+1 Intensity     99264</code></pre>
+<p>olink_lod() calculates normalization-compatible LOD values for assays
+using an NPX-based Fixed LOD. For assays using a count-based Fixed LOD,
+conversion of LODCount to an NPX-scale threshold requires
+extension-control counts and plate-control measurements. The necessary
+extension-control assay rows are absent from the supplied CSV, resulting
+in missing NPX-scale LOD values for these assays. Additionally,
+low-count values that were converted to NPX values need to be
+interpreted with caution. In the next sections of code, count-based
+assays are therefore classified directly by comparing the observed assay
+count with the corresponding Fixed LOD count threshold. This
+classification is used only to determine whether a measurement is above
+or below LOD; it does not reconstruct an NPX-scale LOD value.</p>
+</div>
+<div id="check-the-lods-for-counts-where-necessary"
+class="section level2">
+<h2>check the LODs for counts, where necessary</h2>
+<pre class="r"><code>#reattach LODMethod and the count threshold because olink_lod() does not retain them
+lod_lookup &lt;- fixed_lod_project |&gt;
+  dplyr::select(
+    dplyr::all_of(lod_key),
+    LODMethod,
+    FixedLODNPX_reference = LODNPX,
+    FixedLODCount_reference = LODCount
+  )
+
+
+# Attach the Fixed LOD method and classify each protein measurement.
+#
+# lod_npx:
+#   Compare final NPX with the normalization-compatible LOD produced by olink_lod().
+#
+# lod_count:
+#   Compare the raw assay count with the original Fixed LOD count threshold, because the extension-control rows required to produce an NPX-scale threshold are absent from the supplied dataset.
+
+npx_lod_classified &lt;- npx_with_lod |&gt;
+  dplyr::left_join(
+    lod_lookup,
+    by = lod_key,
+    relationship = &quot;many-to-one&quot;
+  ) |&gt;
+  dplyr::mutate(
+    AboveLOD = dplyr::case_when(
+
+      # NPX-based Fixed LOD
+      AssayType == &quot;assay&quot; &amp;
+        LODMethod == &quot;lod_npx&quot; &amp;
+        !is.na(NPX) &amp;
+        !is.na(LOD) ~
+        NPX &gt; LOD,
+
+      # Count-based Fixed LOD
+      AssayType == &quot;assay&quot; &amp;
+        LODMethod == &quot;lod_count&quot; &amp;
+        !is.na(Count) &amp;
+        !is.na(FixedLODCount_reference) ~
+        Count &gt; FixedLODCount_reference,
+
+      # Non-assay rows or measurements lacking a value or threshold
+      TRUE ~ NA
+    )
+  )</code></pre>
+<pre class="r"><code># Validate LOD classification for protein-assay measurements only.
+
+lod_validation &lt;- npx_lod_classified |&gt;
+  dplyr::filter(
+    AssayType == &quot;assay&quot;
+  ) |&gt;
+  dplyr::summarise(
+    assay_measurements = dplyr::n(),
+
+    missing_lod_method =
+      sum(is.na(LODMethod)),
+
+    missing_npx_measurement =
+      sum(
+        LODMethod == &quot;lod_npx&quot; &amp;
+          is.na(NPX),
+        na.rm = TRUE
+      ),
+
+    missing_npx_threshold =
+      sum(
+        LODMethod == &quot;lod_npx&quot; &amp;
+          is.na(LOD),
+        na.rm = TRUE
+      ),
+
+    missing_count_measurement =
+      sum(
+        LODMethod == &quot;lod_count&quot; &amp;
+          is.na(Count),
+        na.rm = TRUE
+      ),
+
+    missing_count_threshold =
+      sum(
+        LODMethod == &quot;lod_count&quot; &amp;
+          is.na(FixedLODCount_reference),
+        na.rm = TRUE
+      ),
+
+    unclassified_measurements =
+      sum(is.na(AboveLOD))
+  )
+
+lod_validation</code></pre>
+<pre><code># A tibble: 1 × 7
+  assay_measurements missing_lod_method missing_npx_measurement
+               &lt;int&gt;              &lt;int&gt;                   &lt;int&gt;
+1              99264                  0                       0
+# ℹ 4 more variables: missing_npx_threshold &lt;int&gt;,
+#   missing_count_measurement &lt;int&gt;, missing_count_threshold &lt;int&gt;,
+#   unclassified_measurements &lt;int&gt;</code></pre>
+<pre class="r"><code># Inspect whether NPX-scale LOD availability differs by Fixed LOD method.
+
+# lod_npx assays should normally have a non-missing LOD.
+# lod_count assays are expected to have missing LOD values in this dataset because extension-control assay rows were not supplied.
+
+npx_lod_classified |&gt;
+  dplyr::filter(
+    AssayType == &quot;assay&quot;
+  ) |&gt;
+  dplyr::distinct(
+    OlinkID,
+    DataAnalysisRefID,
+    LODMethod,
+    missing_npx_scale_lod = is.na(LOD)
+  ) |&gt;
+  dplyr::count(
+    LODMethod,
+    missing_npx_scale_lod,
+    name = &quot;number_of_assays&quot;
+  )</code></pre>
+<pre><code># A tibble: 2 × 3
+  LODMethod missing_npx_scale_lod number_of_assays
+  &lt;chr&gt;     &lt;lgl&gt;                            &lt;int&gt;
+1 lod_count TRUE                               121
+2 lod_npx   FALSE                              913</code></pre>
+<pre class="r"><code>npx_lod_classified |&gt;
+  dplyr::count(
+    LODMethod,
+    AboveLOD,
+    .drop = FALSE
+  )</code></pre>
+<pre><code># A tibble: 4 × 3
+  LODMethod AboveLOD     n
+  &lt;chr&gt;     &lt;lgl&gt;    &lt;int&gt;
+1 lod_count FALSE     7059
+2 lod_count TRUE      4557
+3 lod_npx   FALSE    59608
+4 lod_npx   TRUE     28040</code></pre>
+</div>
+</div>
+<div id="subset-samples-required-for-further-analysis"
+class="section level1">
+<h1>Subset samples required for further analysis</h1>
+<pre class="r"><code>#renamin the full dataset
+## Complete plate dataset after LOD integration and classification. This object retains all samples available in the supplied Olink file.
+
+npx_qc_full &lt;- npx_lod_classified
+
+#taking the samples I need in a new dataset
+##sampleID is the original identifier
+##sampleLabel is the label used in plots etc. 
+
+
+samples_to_keep &lt;- c(
+  &quot;s16MT_NC_CMM&quot;,
+  &quot;s26MT_NC_CMM&quot;,
+  &quot;s312MT_NCCMM&quot;,
+  &quot;s46MT_TGFCMM&quot;,
+  &quot;s56MT_TGFCMM&quot;,
+  &quot;s612MTTGFCMM&quot;,
+  &quot;MM_medium&quot;, 
+  &quot;EX1_Con1_NC&quot;,
+  &quot;EX1_Con2_NC&quot;,
+  &quot;EX2_Con1_NC&quot;,
+  &quot;EX2_Con2_NC&quot;,
+  &quot;EX3_Cont_NC&quot;,
+  &quot;EX1_Con1_TGF&quot;,
+  &quot;EX1_Cont_2_TGF&quot;,
+  &quot;EX2_Con1_TGF&quot;,
+  &quot;EX2_Con2_TGF&quot;,
+  &quot;EX3_Cont_TGF&quot;
+)</code></pre>
+<pre class="r"><code>sample_info &lt;- tibble::tribble(
+  ~SampleID,          ~Condition, ~MT_count, ~Replicate, ~Experiment, ~Sample_role,
+  
+  # 6- and 12-microtissue samples
+  &quot;s16MT_NC_CMM&quot;,     &quot;Control&quot;,           6,          1, NA_character_, &quot;Conditioned_medium&quot;,
+  &quot;s26MT_NC_CMM&quot;,     &quot;Control&quot;,           6,          2, NA_character_, &quot;Conditioned_medium&quot;,
+  &quot;s312MT_NCCMM&quot;,     &quot;Control&quot;,          12,          1, NA_character_, &quot;Conditioned_medium&quot;,
+  &quot;s46MT_TGFCMM&quot;,     &quot;TGF_beta&quot;,          6,          1, NA_character_, &quot;Conditioned_medium&quot;,
+  &quot;s56MT_TGFCMM&quot;,     &quot;TGF_beta&quot;,          6,          2, NA_character_, &quot;Conditioned_medium&quot;,
+  &quot;s612MTTGFCMM&quot;,     &quot;TGF_beta&quot;,         12,          1, NA_character_, &quot;Conditioned_medium&quot;,
+  
+  # Medium-only control
+  &quot;MM_medium&quot;,        &quot;Medium&quot;,             0,          1, NA_character_, &quot;Medium_control&quot;,
+  
+  # One-microtissue control samples
+  &quot;EX1_Con1_NC&quot;,      &quot;Control&quot;,            1,          1, &quot;EX1&quot;, &quot;Conditioned_medium&quot;,
+  &quot;EX1_Con2_NC&quot;,      &quot;Control&quot;,            1,          2, &quot;EX1&quot;, &quot;Conditioned_medium&quot;,
+  &quot;EX2_Con1_NC&quot;,      &quot;Control&quot;,            1,          3, &quot;EX2&quot;, &quot;Conditioned_medium&quot;,
+  &quot;EX2_Con2_NC&quot;,      &quot;Control&quot;,            1,          4, &quot;EX2&quot;, &quot;Conditioned_medium&quot;,
+  &quot;EX3_Cont_NC&quot;,      &quot;Control&quot;,            1,          5, &quot;EX3&quot;, &quot;Conditioned_medium&quot;,
+  
+  # One-microtissue TGF-beta samples
+  &quot;EX1_Con1_TGF&quot;,     &quot;TGF_beta&quot;,           1,          1, &quot;EX1&quot;, &quot;Conditioned_medium&quot;,
+  &quot;EX1_Cont_2_TGF&quot;,   &quot;TGF_beta&quot;,           1,          2, &quot;EX1&quot;, &quot;Conditioned_medium&quot;,
+  &quot;EX2_Con1_TGF&quot;,     &quot;TGF_beta&quot;,           1,          3, &quot;EX2&quot;, &quot;Conditioned_medium&quot;,
+  &quot;EX2_Con2_TGF&quot;,     &quot;TGF_beta&quot;,           1,          4, &quot;EX2&quot;, &quot;Conditioned_medium&quot;,
+  &quot;EX3_Cont_TGF&quot;,     &quot;TGF_beta&quot;,           1,          5, &quot;EX3&quot;, &quot;Conditioned_medium&quot;
+)
+
+sample_info</code></pre>
+<pre><code># A tibble: 17 × 6
+   SampleID       Condition MT_count Replicate Experiment Sample_role       
+   &lt;chr&gt;          &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;             
+ 1 s16MT_NC_CMM   Control          6         1 &lt;NA&gt;       Conditioned_medium
+ 2 s26MT_NC_CMM   Control          6         2 &lt;NA&gt;       Conditioned_medium
+ 3 s312MT_NCCMM   Control         12         1 &lt;NA&gt;       Conditioned_medium
+ 4 s46MT_TGFCMM   TGF_beta         6         1 &lt;NA&gt;       Conditioned_medium
+ 5 s56MT_TGFCMM   TGF_beta         6         2 &lt;NA&gt;       Conditioned_medium
+ 6 s612MTTGFCMM   TGF_beta        12         1 &lt;NA&gt;       Conditioned_medium
+ 7 MM_medium      Medium           0         1 &lt;NA&gt;       Medium_control    
+ 8 EX1_Con1_NC    Control          1         1 EX1        Conditioned_medium
+ 9 EX1_Con2_NC    Control          1         2 EX1        Conditioned_medium
+10 EX2_Con1_NC    Control          1         3 EX2        Conditioned_medium
+11 EX2_Con2_NC    Control          1         4 EX2        Conditioned_medium
+12 EX3_Cont_NC    Control          1         5 EX3        Conditioned_medium
+13 EX1_Con1_TGF   TGF_beta         1         1 EX1        Conditioned_medium
+14 EX1_Cont_2_TGF TGF_beta         1         2 EX1        Conditioned_medium
+15 EX2_Con1_TGF   TGF_beta         1         3 EX2        Conditioned_medium
+16 EX2_Con2_TGF   TGF_beta         1         4 EX2        Conditioned_medium
+17 EX3_Cont_TGF   TGF_beta         1         5 EX3        Conditioned_medium</code></pre>
+<pre class="r"><code>sample_info |&gt;
+  dplyr::count(
+    Condition,
+    MT_count,
+    name = &quot;number_of_wells&quot;
+  ) |&gt;
+  dplyr::arrange(Condition, MT_count)</code></pre>
+<pre><code># A tibble: 7 × 3
+  Condition MT_count number_of_wells
+  &lt;chr&gt;        &lt;dbl&gt;           &lt;int&gt;
+1 Control          1               5
+2 Control          6               2
+3 Control         12               1
+4 Medium           0               1
+5 TGF_beta         1               5
+6 TGF_beta         6               2
+7 TGF_beta        12               1</code></pre>
+<pre class="r"><code>npx_selected &lt;- npx_lod_classified |&gt;
+  dplyr::filter(
+    SampleID %in% samples_to_keep,
+    SampleType == &quot;SAMPLE&quot;
+  ) |&gt;
+  dplyr::left_join(
+    sample_info,
+    by = &quot;SampleID&quot;,
+    relationship = &quot;many-to-one&quot;
+  )
+
+# Confirm that all requested original sample IDs were selected
+setdiff(
+  samples_to_keep,
+  unique(npx_selected$SampleID)
+)</code></pre>
+<pre><code>character(0)</code></pre>
+<pre class="r"><code>npx_selected |&gt;
+  dplyr::summarise(
+    rows = dplyr::n(),
+    samples = dplyr::n_distinct(SampleID),
+    assays = dplyr::n_distinct(OlinkID)
+  )</code></pre>
+<pre><code># A tibble: 1 × 3
+   rows samples assays
+  &lt;int&gt;   &lt;int&gt;  &lt;int&gt;
+1 17578      17   1034</code></pre>
+<pre class="r"><code># Lookup table for readable sample names
+sample_name_lookup &lt;- tibble::tribble(
+  ~SampleID,   ~SampleLabel,
+
+  # Medium-only sample
+  &quot;MM_medium&quot;,         &quot;Medium&quot;,
+
+  # One-microtissue control samples
+  &quot;EX1_Con1_NC&quot;,       &quot;1_MT_NC_Ex1.1&quot;,
+  &quot;EX1_Con2_NC&quot;,       &quot;1_MT_NC_Ex1.2&quot;,
+  &quot;EX2_Con1_NC&quot;,       &quot;1_MT_NC_Ex2.1&quot;,
+  &quot;EX2_Con2_NC&quot;,       &quot;1_MT_NC_Ex2.2&quot;,
+  &quot;EX3_Cont_NC&quot;,       &quot;1_MT_NC_Ex3.1&quot;,
+
+  # One-microtissue TGF-beta samples
+  &quot;EX1_Con1_TGF&quot;,      &quot;1_MT_TGF_Ex1.1&quot;,
+  &quot;EX1_Cont_2_TGF&quot;,    &quot;1_MT_TGF_Ex1.2&quot;,
+  &quot;EX2_Con1_TGF&quot;,      &quot;1_MT_TGF_Ex2.1&quot;,
+  &quot;EX2_Con2_TGF&quot;,      &quot;1_MT_TGF_Ex2.2&quot;,
+  &quot;EX3_Cont_TGF&quot;,      &quot;1_MT_TGF_Ex3.1&quot;,
+
+  # Six-microtissue control samples
+  &quot;s16MT_NC_CMM&quot;,      &quot;6_MT_NC_1&quot;,
+  &quot;s26MT_NC_CMM&quot;,      &quot;6_MT_NC_2&quot;,
+
+  # Six-microtissue TGF-beta samples
+  &quot;s46MT_TGFCMM&quot;,      &quot;6_MT_TGF_1&quot;,
+  &quot;s56MT_TGFCMM&quot;,      &quot;6_MT_TGF_2&quot;,
+
+  # Twelve-microtissue samples
+  &quot;s312MT_NCCMM&quot;,      &quot;12_MT_NC&quot;,
+  &quot;s612MTTGFCMM&quot;,      &quot;12_MT_TGF&quot;
+)
+
+
+# Check that every selected sample has a new name
+missing_name_mappings &lt;- setdiff(
+  unique(npx_selected$SampleID),
+  sample_name_lookup$SampleID
+)
+
+missing_name_mappings</code></pre>
+<pre><code>character(0)</code></pre>
+<pre class="r"><code>npx_selected &lt;- npx_selected |&gt;
+  dplyr::left_join(
+    sample_name_lookup,
+    by = &quot;SampleID&quot;,
+    relationship = &quot;many-to-one&quot;
+  )
+
+#confirm the join worked
+npx_selected |&gt;
+  dplyr::distinct(
+    SampleID,
+    SampleLabel,
+    Condition,
+    MT_count,
+    Replicate,
+    Experiment,
+    Sample_role
+  ) |&gt;
+  dplyr::arrange(
+    MT_count,
+    Condition,
+    Replicate
+  ) |&gt;
+  print(n = Inf)</code></pre>
+<pre><code># A tibble: 17 × 7
+   SampleID      SampleLabel Condition MT_count Replicate Experiment Sample_role
+   &lt;chr&gt;         &lt;chr&gt;       &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      
+ 1 MM_medium     Medium      Medium           0         1 &lt;NA&gt;       Medium_con…
+ 2 EX1_Con1_NC   1_MT_NC_Ex… Control          1         1 EX1        Conditione…
+ 3 EX1_Con2_NC   1_MT_NC_Ex… Control          1         2 EX1        Conditione…
+ 4 EX2_Con1_NC   1_MT_NC_Ex… Control          1         3 EX2        Conditione…
+ 5 EX2_Con2_NC   1_MT_NC_Ex… Control          1         4 EX2        Conditione…
+ 6 EX3_Cont_NC   1_MT_NC_Ex… Control          1         5 EX3        Conditione…
+ 7 EX1_Con1_TGF  1_MT_TGF_E… TGF_beta         1         1 EX1        Conditione…
+ 8 EX1_Cont_2_T… 1_MT_TGF_E… TGF_beta         1         2 EX1        Conditione…
+ 9 EX2_Con1_TGF  1_MT_TGF_E… TGF_beta         1         3 EX2        Conditione…
+10 EX2_Con2_TGF  1_MT_TGF_E… TGF_beta         1         4 EX2        Conditione…
+11 EX3_Cont_TGF  1_MT_TGF_E… TGF_beta         1         5 EX3        Conditione…
+12 s16MT_NC_CMM  6_MT_NC_1   Control          6         1 &lt;NA&gt;       Conditione…
+13 s26MT_NC_CMM  6_MT_NC_2   Control          6         2 &lt;NA&gt;       Conditione…
+14 s46MT_TGFCMM  6_MT_TGF_1  TGF_beta         6         1 &lt;NA&gt;       Conditione…
+15 s56MT_TGFCMM  6_MT_TGF_2  TGF_beta         6         2 &lt;NA&gt;       Conditione…
+16 s312MT_NCCMM  12_MT_NC    Control         12         1 &lt;NA&gt;       Conditione…
+17 s612MTTGFCMM  12_MT_TGF   TGF_beta        12         1 &lt;NA&gt;       Conditione…</code></pre>
+<pre class="r"><code>#confirm no sample is missing
+npx_selected |&gt;
+  dplyr::filter(
+    is.na(SampleLabel)
+  ) |&gt;
+  dplyr::distinct(
+    SampleID
+  )</code></pre>
+<pre><code># A tibble: 0 × 1
+# ℹ 1 variable: SampleID &lt;chr&gt;</code></pre>
+</div>
+<div id="qc" class="section level1">
+<h1>QC</h1>
+<div id="sample-warnings" class="section level2">
+<h2>sample warnings</h2>
+<pre class="r"><code>#check in the full data and only subset
+# Sample QC summary for the whole file and selected samples.
+# Each sample is counted once, not once per protein.
+
+sample_qc_summary &lt;- dplyr::bind_rows(
+  npx_qc_full |&gt;
+    dplyr::filter(SampleType == &quot;SAMPLE&quot;) |&gt;
+    dplyr::distinct(SampleID, SampleQC) |&gt;
+    dplyr::count(SampleQC, name = &quot;Whole_file&quot;),
+
+  npx_selected |&gt;
+    dplyr::filter(SampleType == &quot;SAMPLE&quot;) |&gt;
+    dplyr::distinct(SampleID, SampleQC) |&gt;
+    dplyr::count(SampleQC, name = &quot;Selected_samples&quot;)
+) |&gt;
+  dplyr::group_by(SampleQC) |&gt;
+  dplyr::summarise(
+    Whole_file = sum(Whole_file, na.rm = TRUE),
+    Selected_samples = sum(Selected_samples, na.rm = TRUE),
+    .groups = &quot;drop&quot;
+  )
+
+sample_qc_summary</code></pre>
+<pre><code># A tibble: 1 × 3
+  SampleQC Whole_file Selected_samples
+  &lt;chr&gt;         &lt;int&gt;            &lt;int&gt;
+1 PASS             86               17</code></pre>
+</div>
+<div id="assay-warnings" class="section level2">
+<h2>assay warnings</h2>
+<pre class="r"><code>#we already know that one assay has a warning, but it should not yet be removed, but remembered for later on
+
+# Assay QC summary for the whole file and selected samples.
+# Each assay is counted once, not once per sample measurement.
+
+assay_qc_summary &lt;- dplyr::bind_rows(
+  npx_qc_full |&gt;
+    dplyr::filter(
+      SampleType == &quot;SAMPLE&quot;,
+      AssayType == &quot;assay&quot;
+    ) |&gt;
+    dplyr::distinct(
+      PlateID,
+      OlinkID,
+      AssayQC
+    ) |&gt;
+    dplyr::mutate(
+      Dataset = &quot;Whole file&quot;
+    ),
+
+  npx_selected |&gt;
+    dplyr::filter(
+      SampleType == &quot;SAMPLE&quot;,
+      AssayType == &quot;assay&quot;
+    ) |&gt;
+    dplyr::distinct(
+      PlateID,
+      OlinkID,
+      AssayQC
+    ) |&gt;
+    dplyr::mutate(
+      Dataset = &quot;Selected samples&quot;
+    )
+) |&gt;
+  dplyr::count(
+    Dataset,
+    AssayQC
+  ) |&gt;
+  tidyr::pivot_wider(
+    names_from = Dataset,
+    values_from = n,
+    values_fill = 0
+  )
+
+assay_qc_summary</code></pre>
+<pre><code># A tibble: 2 × 3
+  AssayQC `Selected samples` `Whole file`
+  &lt;chr&gt;                &lt;int&gt;        &lt;int&gt;
+1 PASS                  1033         1033
+2 WARN                     1            1</code></pre>
+</div>
+<div id="npx-distribution-plot" class="section level2">
+<h2>NPX distribution plot</h2>
+<pre class="r"><code>#first for the entire plate
+## NPX distribution plots
+
+# Plot NPX distributions for all biological samples in the supplied file.
+# Each box represents the distribution of protein NPX values within one sample.
+
+# Data used for the whole-file distribution plot
+
+npx_distribution_full_data &lt;- npx_qc_full |&gt;
+  dplyr::filter(
+    SampleType == &quot;SAMPLE&quot;,
+    AssayType == &quot;assay&quot;
+  )
+
+# Check the exact dataset used in the plot.
+# NPX is explicitly selected instead of PCNormalizedNPX.
+
+npx_distribution_full_check &lt;- OlinkAnalyze::check_npx(
+  df = npx_distribution_full_data,
+  preferred_names = c(
+    &quot;quant&quot; = &quot;NPX&quot;
+  )
+)</code></pre>
+<pre><code>1 assay exhibited assay QC warnings in column `AssayQC` of the dataset:
+&quot;OID50794&quot;.
+ℹ Consider running `clean_npx()` next!</code></pre>
+<pre class="r"><code>npx_distribution_full &lt;- OlinkAnalyze::olink_dist_plot(
+  df = npx_distribution_full_data,
+  check_log = npx_distribution_full_check,
+  color_g = &quot;SampleQC&quot;
+)
+
+npx_distribution_full</code></pre>
+<p><img src="figure/01_import_olink.Rmd/NPX%20distribution%20plot%20per%20sample-1.png" alt="" width="1248" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#and then for the subset (only my samples)
+
+
+# Define the display order for the selected samples.
+selected_sample_order &lt;- c(
+  &quot;Medium&quot;,
+
+  &quot;1_MT_NC_Ex1.1&quot;,
+  &quot;1_MT_NC_Ex1.2&quot;,
+  &quot;1_MT_NC_Ex2.1&quot;,
+  &quot;1_MT_NC_Ex2.2&quot;,
+  &quot;1_MT_NC_Ex3.1&quot;,
+
+  &quot;1_MT_TGF_Ex1.1&quot;,
+  &quot;1_MT_TGF_Ex1.2&quot;,
+  &quot;1_MT_TGF_Ex2.1&quot;,
+  &quot;1_MT_TGF_Ex2.2&quot;,
+  &quot;1_MT_TGF_Ex3.1&quot;,
+
+  &quot;6_MT_NC_1&quot;,
+  &quot;6_MT_NC_2&quot;,
+  &quot;6_MT_TGF_1&quot;,
+  &quot;6_MT_TGF_2&quot;,
+
+  &quot;12_MT_NC&quot;,
+  &quot;12_MT_TGF&quot;
+)
+
+# Create a plotting object with readable sample labels. so that npx_selected is not modified. In this plotting copy only,
+# SampleLabel is placed in SampleID because olink_dist_plot() uses SampleID for the x-axis.
+
+npx_selected_plot &lt;- npx_selected |&gt;
+  dplyr::filter(
+    SampleType == &quot;SAMPLE&quot;,
+    AssayType == &quot;assay&quot;
+  ) |&gt;
+  dplyr::mutate(
+    Condition = factor(
+      Condition,
+      levels = c(
+        &quot;Medium&quot;,
+        &quot;Control&quot;,
+        &quot;TGF_beta&quot;
+      )
+    ),
+    SampleID = factor(
+      SampleLabel,
+      levels = selected_sample_order
+    )
+  )
+
+npx_distribution_selected_check &lt;- OlinkAnalyze::check_npx(
+  df = npx_selected_plot,
+  preferred_names = c(
+    &quot;quant&quot; = &quot;NPX&quot;
+  )
+)</code></pre>
+<pre><code>1 assay exhibited assay QC warnings in column `AssayQC` of the dataset:
+&quot;OID50794&quot;.
+ℹ Consider running `clean_npx()` next!</code></pre>
+<pre class="r"><code>#and then plot
+npx_distribution_selected &lt;- OlinkAnalyze::olink_dist_plot(
+  df = npx_selected_plot,
+  color_g = &quot;Condition&quot;
+)</code></pre>
+<pre><code>`check_log` not provided. Running `check_npx()`.
+ℹ It is recommended that the user runs `check_npx()` to get a full picture of
+  the results from the data validity check!
+ℹ  More than one column names in `df` was associated with certain key. One was
+  selected based on an ordered list:
+* &quot;quant&quot;: &quot;NPX&quot; was selected. Options were &quot;NPX&quot; or &quot;PCNormalizedNPX&quot;.
+Please use `preferred_names` to select a different column name.
+1 assay exhibited assay QC warnings in column `AssayQC` of the dataset:
+&quot;OID50794&quot;.
+ℹ Consider running `clean_npx()` next!</code></pre>
+<pre class="r"><code>npx_distribution_selected &lt;- npx_distribution_selected +
+  ggplot2::scale_fill_manual(
+    values = c(
+      &quot;Medium&quot; = &quot;grey60&quot;,
+      &quot;Control&quot; = &quot;#4C78A8&quot;,
+      &quot;TGF_beta&quot; = &quot;#E45756&quot;
+    ),
+    labels = c(
+      &quot;Medium&quot;,
+      &quot;Control&quot;,
+      &quot;TGF-β&quot;
+    )
+  ) +
+  ggplot2::labs(
+    title = &quot;NPX distributions across selected samples&quot;,
+    x = &quot;Sample&quot;,
+    y = &quot;NPX&quot;,
+    fill = &quot;Condition&quot;
+  ) +
+  ggplot2::theme_bw() +
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 14),
+    plot.title = ggplot2::element_text(
+      size = 18,
+      face = &quot;bold&quot;
+    ),
+    axis.title = ggplot2::element_text(size = 16),
+    axis.text.y = ggplot2::element_text(size = 12),
+    axis.text.x = ggplot2::element_text(
+      size = 12,
+      angle = 45,
+      hjust = 1
+    ),
+    legend.title = ggplot2::element_text(size = 14),
+    legend.text = ggplot2::element_text(size = 12),
+    panel.grid.major.x = ggplot2::element_blank()
+  )</code></pre>
+<pre><code>Scale for fill is already present.
+Adding another scale for fill, which will replace the existing scale.</code></pre>
+<pre class="r"><code>npx_distribution_selected</code></pre>
+<p><img src="figure/01_import_olink.Rmd/NPX%20distribution%20plot%20per%20sample-2.png" alt="" width="1248" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#Each box summarizes approximately 1,034 NPX values in one sample:
+##the central line is the median NPX;
+##the box represents the middle 50% of NPX values;
+##the whiskers show the broader distribution;
+##points beyond the whiskers are individual protein values, not necessarily problematic observations.</code></pre>
+</div>
+<div id="median-iqr-outlier-plot" class="section level2">
+<h2>median IQR outlier plot</h2>
+<pre class="r"><code>#full dataset
+
+# Median–IQR QC plot for all biological samples in the file.
+
+# The dashed lines represent mean ± 3 SD for the sample medians and IQRs, calculated separately within each panel. This is the default of olink.
+
+median_iqr_full &lt;- OlinkAnalyze::olink_qc_plot(
+  df = npx_distribution_full_data,
+  check_log = npx_distribution_full_check,
+  color_g = &quot;SampleQC&quot;,
+  label_outliers = TRUE,
+  IQR_outlierDef = 3L,
+  median_outlierDef = 3L,
+  outlierLines = TRUE
+) +
+  ggplot2::labs(
+    title = &quot;Median–IQR QC plot for all samples in the file&quot;,
+    color = &quot;Sample QC&quot;
+  ) +
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 13),
+    plot.title = ggplot2::element_text(
+      size = 17,
+      face = &quot;bold&quot;
+    ),
+    axis.title = ggplot2::element_text(size = 14),
+    axis.text = ggplot2::element_text(size = 12),
+    strip.text = ggplot2::element_text(
+      size = 13,
+      face = &quot;bold&quot;
+    ),
+    legend.title = ggplot2::element_text(size = 13),
+    legend.text = ggplot2::element_text(size = 12)
+  )
+
+median_iqr_full</code></pre>
+<p><img src="figure/01_import_olink.Rmd/median%20IQR%20outlier%20plot-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#now the subset 
+
+# Create a plotting-only copy with readable sample labels.
+# SampleID is replaced only in this temporary object because
+# olink_qc_plot() uses SampleID for point labels.
+
+median_iqr_selected_data &lt;- npx_selected |&gt;
+  dplyr::filter(
+    SampleType == &quot;SAMPLE&quot;,
+    AssayType == &quot;assay&quot;
+  ) |&gt;
+  dplyr::mutate(
+    SampleID = SampleLabel
+  )
+
+#check the plotting object
+median_iqr_selected_check &lt;- OlinkAnalyze::check_npx(
+  df = median_iqr_selected_data,
+  preferred_names = c(
+    &quot;quant&quot; = &quot;NPX&quot;
+  )
+)</code></pre>
+<pre><code>1 assay exhibited assay QC warnings in column `AssayQC` of the dataset:
+&quot;OID50794&quot;.
+ℹ Consider running `clean_npx()` next!</code></pre>
+<pre class="r"><code># Median–IQR QC plot for the selected project samples.
+
+median_iqr_selected &lt;- OlinkAnalyze::olink_qc_plot(
+  df = median_iqr_selected_data,
+  check_log = median_iqr_selected_check,
+  color_g = &quot;Condition&quot;,
+  label_outliers = TRUE,
+  IQR_outlierDef = 3L,
+  median_outlierDef = 3L,
+  outlierLines = TRUE
+) +
+  ggplot2::labs(
+    title = &quot;Median–IQR QC plot for selected samples&quot;,
+    color = &quot;Condition&quot;
+  ) +
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 14),
+    plot.title = ggplot2::element_text(
+      size = 18,
+      face = &quot;bold&quot;
+    ),
+    axis.title = ggplot2::element_text(size = 15),
+    axis.text = ggplot2::element_text(size = 12),
+    strip.text = ggplot2::element_text(
+      size = 14,
+      face = &quot;bold&quot;
+    ),
+    legend.title = ggplot2::element_text(size = 14),
+    legend.text = ggplot2::element_text(size = 12)
+  )
+
+median_iqr_selected</code></pre>
+<p><img src="figure/01_import_olink.Rmd/median%20IQR%20outlier%20plot-2.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#everything within the dashed lines is not an outlier
+
+#inspect flagged samples: 
+# Combine samples flagged in the whole-file and selected-sample plots.
+#
+# Outlier == 1 indicates that the sample lies outside at least one
+# of the median or IQR thresholds shown by the dashed lines.
+
+median_iqr_flagged_samples &lt;- dplyr::bind_rows(
+  median_iqr_full$data |&gt;
+    dplyr::filter(
+      Outlier == 1L
+    ) |&gt;
+    dplyr::transmute(
+      Dataset = &quot;Whole file&quot;,
+      Sample = as.character(SampleID),
+      Panel,
+      Sample_median = sample_median,
+      IQR
+    ),
+
+  median_iqr_selected$data |&gt;
+    dplyr::filter(
+      Outlier == 1L
+    ) |&gt;
+    dplyr::transmute(
+      Dataset = &quot;Selected samples&quot;,
+      Sample = as.character(SampleID),
+      Panel,
+      Sample_median = sample_median,
+      IQR
+    )
+) |&gt;
+  dplyr::arrange(
+    Dataset,
+    Panel,
+    Sample
+  )
+
+median_iqr_flagged_samples</code></pre>
+<pre><code># A tibble: 1 × 5
+  Dataset    Sample       Panel  Sample_median   IQR
+  &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt;
+1 Whole file CZD15_CTO_ME Reveal          3.30  3.65</code></pre>
+</div>
+<div id="pca" class="section level2">
+<h2>PCA</h2>
+<pre class="r"><code>#create plotting group -&gt; this is only for coloring, the PCA still runs unsupervised; in a new dataset
+npx_selected_pca &lt;- npx_selected |&gt;
+  dplyr::mutate(
+    PCA_group = dplyr::case_when(
+      Condition == &quot;Medium&quot; ~ &quot;Medium&quot;,
+      Condition == &quot;Control&quot; &amp; MT_count == 1 ~ &quot;1 MT Control&quot;,
+      Condition == &quot;TGF_beta&quot; &amp; MT_count == 1 ~ &quot;1 MT TGF-β&quot;,
+      Condition == &quot;Control&quot; &amp; MT_count == 6 ~ &quot;6 MT Control&quot;,
+      Condition == &quot;TGF_beta&quot; &amp; MT_count == 6 ~ &quot;6 MT TGF-β&quot;,
+      Condition == &quot;Control&quot; &amp; MT_count == 12 ~ &quot;12 MT Control&quot;,
+      Condition == &quot;TGF_beta&quot; &amp; MT_count == 12 ~ &quot;12 MT TGF-β&quot;,
+      TRUE ~ NA_character_
+    ),
+
+    # Replace SampleID only in the plotting object.
+    SampleID = SampleLabel
+  )
+
+#check the grouping
+npx_selected_pca |&gt;
+  dplyr::distinct(
+    SampleID,
+    Condition,
+    MT_count,
+    PCA_group
+  ) |&gt;
+  dplyr::arrange(
+    MT_count,
+    Condition,
+    SampleID
+  ) |&gt;
+  print(n = Inf)</code></pre>
+<pre><code># A tibble: 17 × 4
+   SampleID       Condition MT_count PCA_group    
+   &lt;chr&gt;          &lt;chr&gt;        &lt;dbl&gt; &lt;chr&gt;        
+ 1 Medium         Medium           0 Medium       
+ 2 1_MT_NC_Ex1.1  Control          1 1 MT Control 
+ 3 1_MT_NC_Ex1.2  Control          1 1 MT Control 
+ 4 1_MT_NC_Ex2.1  Control          1 1 MT Control 
+ 5 1_MT_NC_Ex2.2  Control          1 1 MT Control 
+ 6 1_MT_NC_Ex3.1  Control          1 1 MT Control 
+ 7 1_MT_TGF_Ex1.1 TGF_beta         1 1 MT TGF-β   
+ 8 1_MT_TGF_Ex1.2 TGF_beta         1 1 MT TGF-β   
+ 9 1_MT_TGF_Ex2.1 TGF_beta         1 1 MT TGF-β   
+10 1_MT_TGF_Ex2.2 TGF_beta         1 1 MT TGF-β   
+11 1_MT_TGF_Ex3.1 TGF_beta         1 1 MT TGF-β   
+12 6_MT_NC_1      Control          6 6 MT Control 
+13 6_MT_NC_2      Control          6 6 MT Control 
+14 6_MT_TGF_1     TGF_beta         6 6 MT TGF-β   
+15 6_MT_TGF_2     TGF_beta         6 6 MT TGF-β   
+16 12_MT_NC       Control         12 12 MT Control
+17 12_MT_TGF      TGF_beta        12 12 MT TGF-β  </code></pre>
+<pre class="r"><code>#create a check lof for npx_selected
+npx_selected_pca_check &lt;- OlinkAnalyze::check_npx(
+  df = npx_selected_pca,
+  preferred_names = c(&quot;quant&quot; = &quot;NPX&quot;)
+)</code></pre>
+<pre><code>1 assay exhibited assay QC warnings in column `AssayQC` of the dataset:
+&quot;OID50794&quot;.
+ℹ Consider running `clean_npx()` next!</code></pre>
+<pre class="r"><code>#PC1 vs PC2
+pca_pc1_pc2_list &lt;- OlinkAnalyze::olink_pca_plot(
+  df = npx_selected_pca,
+  check_log = npx_selected_pca_check,
+  color_g = &quot;PCA_group&quot;,
+  x_val = 1L,
+  y_val = 2L,
+  label_samples = FALSE,
+  byPanel = FALSE,
+  quiet = TRUE
+)
+
+pca_pc1_pc2 &lt;- pca_pc1_pc2_list[[1]] +
+  ggplot2::geom_text(
+    ggplot2::aes(label = SampleID),
+    vjust = 1.8,
+    size = 3,
+    color = &quot;black&quot;,
+    show.legend = FALSE,
+    check_overlap = TRUE
+  ) +
+  ggplot2::labs(
+    title = &quot;PCA of selected samples&quot;,
+    color = &quot;Group&quot;
+  ) +
+  ggplot2::theme_bw()
+
+pca_pc1_pc2</code></pre>
+<p><img src="figure/01_import_olink.Rmd/PCA-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#PC1 vs PC3 
+pca_pc1_pc3_list &lt;- OlinkAnalyze::olink_pca_plot(
+  df = npx_selected_pca,
+  check_log = npx_selected_pca_check,
+  color_g = &quot;PCA_group&quot;,
+  x_val = 1L,
+  y_val = 3L,
+  label_samples = FALSE,
+  byPanel = FALSE,
+  quiet = TRUE
+)
+
+pca_pc1_pc3 &lt;- pca_pc1_pc3_list[[1]] +
+  ggplot2::geom_text(
+    ggplot2::aes(label = SampleID),
+    vjust = 1.8,
+    size = 3,
+    color = &quot;black&quot;,
+    show.legend = FALSE,
+    check_overlap = TRUE
+  ) +
+  ggplot2::labs(
+    title = &quot;PCA: PC1 versus PC3&quot;,
+    color = &quot;Group&quot;
+  ) +
+  ggplot2::theme_bw()
+
+pca_pc1_pc3</code></pre>
+<p><img src="figure/01_import_olink.Rmd/PCA-2.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#PC2 vs PC3
+pca_pc2_pc3_list &lt;- OlinkAnalyze::olink_pca_plot(
+  df = npx_selected_pca,
+  check_log = npx_selected_pca_check,
+  color_g = &quot;PCA_group&quot;,
+  x_val = 2L,
+  y_val = 3L,
+  label_samples = FALSE,
+  byPanel = FALSE,
+  quiet = TRUE
+)
+
+pca_pc2_pc3 &lt;- pca_pc2_pc3_list[[1]] +
+  ggplot2::geom_text(
+    ggplot2::aes(label = SampleID),
+    vjust = 1.8,
+    size = 3,
+    color = &quot;black&quot;,
+    show.legend = FALSE,
+    check_overlap = TRUE
+  ) +
+  ggplot2::labs(
+    title = &quot;PCA: PC2 versus PC3&quot;,
+    color = &quot;Group&quot;
+  ) +
+  ggplot2::theme_bw()
+
+pca_pc2_pc3</code></pre>
+<p><img src="figure/01_import_olink.Rmd/PCA-3.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>sample_detection_summary &lt;- npx_selected |&gt;
+  dplyr::group_by(
+    SampleID,
+    Condition,
+    MT_count,
+    Replicate,
+    Experiment,
+    Sample_role
+  ) |&gt;
+  dplyr::summarise(
+    total_proteins = dplyr::n_distinct(OlinkID),
+
+    proteins_above_lod = sum(
+      AboveLOD == TRUE,
+      na.rm = TRUE
+    ),
+
+    proteins_below_lod = sum(
+      AboveLOD == FALSE,
+      na.rm = TRUE
+    ),
+
+    missing_lod_classification = sum(
+      is.na(AboveLOD)
+    ),
+
+    percent_above_lod =
+      100 * proteins_above_lod / total_proteins,
+
+    .groups = &quot;drop&quot;
+  ) |&gt;
+  dplyr::arrange(
+    MT_count,
+    Condition,
+    SampleID
+  )
+
+sample_detection_summary</code></pre>
+<pre><code># A tibble: 17 × 11
+   SampleID   Condition MT_count Replicate Experiment Sample_role total_proteins
+   &lt;chr&gt;      &lt;chr&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;                &lt;int&gt;
+ 1 MM_medium  Medium           0         1 &lt;NA&gt;       Medium_con…           1034
+ 2 EX1_Con1_… Control          1         1 EX1        Conditione…           1034
+ 3 EX1_Con2_… Control          1         2 EX1        Conditione…           1034
+ 4 EX2_Con1_… Control          1         3 EX2        Conditione…           1034
+ 5 EX2_Con2_… Control          1         4 EX2        Conditione…           1034
+ 6 EX3_Cont_… Control          1         5 EX3        Conditione…           1034
+ 7 EX1_Con1_… TGF_beta         1         1 EX1        Conditione…           1034
+ 8 EX1_Cont_… TGF_beta         1         2 EX1        Conditione…           1034
+ 9 EX2_Con1_… TGF_beta         1         3 EX2        Conditione…           1034
+10 EX2_Con2_… TGF_beta         1         4 EX2        Conditione…           1034
+11 EX3_Cont_… TGF_beta         1         5 EX3        Conditione…           1034
+12 s16MT_NC_… Control          6         1 &lt;NA&gt;       Conditione…           1034
+13 s26MT_NC_… Control          6         2 &lt;NA&gt;       Conditione…           1034
+14 s46MT_TGF… TGF_beta         6         1 &lt;NA&gt;       Conditione…           1034
+15 s56MT_TGF… TGF_beta         6         2 &lt;NA&gt;       Conditione…           1034
+16 s312MT_NC… Control         12         1 &lt;NA&gt;       Conditione…           1034
+17 s612MTTGF… TGF_beta        12         1 &lt;NA&gt;       Conditione…           1034
+# ℹ 4 more variables: proteins_above_lod &lt;int&gt;, proteins_below_lod &lt;int&gt;,
+#   missing_lod_classification &lt;int&gt;, percent_above_lod &lt;dbl&gt;</code></pre>
+</div>
+<div id="percent-of-proteins-above-lod" class="section level2">
+<h2>Percent of proteins above LOD</h2>
+<pre class="r"><code>#calculate protein detection frequency
+protein_detection_summary &lt;- npx_selected |&gt;
+  dplyr::group_by(
+    OlinkID,
+    Assay,
+    UniProt,
+    LODMethod,
+    AssayQC
+  ) |&gt;
+  dplyr::summarise(
+    total_samples = dplyr::n_distinct(SampleID),
+
+    classifiable_samples = sum(
+      !is.na(AboveLOD)
+    ),
+
+    samples_above_lod = sum(
+      AboveLOD == TRUE,
+      na.rm = TRUE
+    ),
+
+    samples_below_lod = sum(
+      AboveLOD == FALSE,
+      na.rm = TRUE
+    ),
+
+    missing_classification = sum(
+      is.na(AboveLOD)
+    ),
+
+    percent_samples_above_lod =
+      100 * samples_above_lod / classifiable_samples,
+
+    .groups = &quot;drop&quot;
+  ) |&gt;
+  dplyr::arrange(
+    dplyr::desc(percent_samples_above_lod),
+    Assay
+  )
+
+#check that it was done in all samples 
+protein_detection_summary |&gt;
+  dplyr::count(
+    total_samples
+  )</code></pre>
+<pre><code># A tibble: 1 × 2
+  total_samples     n
+          &lt;int&gt; &lt;int&gt;
+1            17  1034</code></pre>
+<pre class="r"><code>#check for missing LOD classification 
+protein_detection_summary |&gt;
+  dplyr::filter(
+    missing_classification &gt; 0
+  )</code></pre>
+<pre><code># A tibble: 0 × 11
+# ℹ 11 variables: OlinkID &lt;chr&gt;, Assay &lt;chr&gt;, UniProt &lt;chr&gt;, LODMethod &lt;chr&gt;,
+#   AssayQC &lt;chr&gt;, total_samples &lt;int&gt;, classifiable_samples &lt;int&gt;,
+#   samples_above_lod &lt;int&gt;, samples_below_lod &lt;int&gt;,
+#   missing_classification &lt;int&gt;, percent_samples_above_lod &lt;dbl&gt;</code></pre>
+<pre class="r"><code>#summarize overall assay detectability
+protein_detection_overview &lt;- protein_detection_summary |&gt;
+  dplyr::summarise(
+    total_proteins = dplyr::n(),
+
+    detected_in_all_samples = sum(
+      percent_samples_above_lod == 100
+    ),
+
+    detected_in_no_samples = sum(
+      percent_samples_above_lod == 0
+    ),
+
+    detected_in_at_least_half = sum(
+      percent_samples_above_lod &gt;= 50
+    ),
+
+    median_detection_percentage = median(
+      percent_samples_above_lod,
+      na.rm = TRUE
+    )
+  )
+
+protein_detection_overview</code></pre>
+<pre><code># A tibble: 1 × 5
+  total_proteins detected_in_all_samples detected_in_no_samples
+           &lt;int&gt;                   &lt;int&gt;                  &lt;int&gt;
+1           1034                      50                    552
+# ℹ 2 more variables: detected_in_at_least_half &lt;int&gt;,
+#   median_detection_percentage &lt;dbl&gt;</code></pre>
+<pre class="r"><code>#histogram
+protein_detection_histogram &lt;- ggplot2::ggplot(
+  protein_detection_summary,
+  ggplot2::aes(
+    x = percent_samples_above_lod
+  )
+) +
+  ggplot2::geom_histogram(
+    binwidth = 10,
+    boundary = 0,
+    closed = &quot;left&quot;,
+    color = &quot;white&quot;
+  ) +
+  ggplot2::scale_x_continuous(
+    breaks = seq(0, 100, by = 10),
+    limits = c(0, 100)
+  ) +
+  ggplot2::labs(
+    title = &quot;Protein detection frequency across selected samples&quot;,
+    subtitle = &quot;Each protein is classified using its assay-specific LOD method&quot;,
+    x = &quot;Samples above LOD (%)&quot;,
+    y = &quot;Number of proteins&quot;
+  ) +
+  ggplot2::theme_bw()
+
+protein_detection_histogram</code></pre>
+<p><img src="figure/01_import_olink.Rmd/Calculate%20protein%20detection%20frequency-1.png" alt="" width="672" style="display: block; margin: auto;" />
+## Percentage of proteins above LOD</p>
+<pre class="r"><code># Calculate protein detectability separately for each selected sample.
+#
+# Only protein assays are included.
+# Proteins for which AboveLOD is NA are reported separately and are not
+# included in the denominator of percent_above_lod.
+
+sample_detection_summary &lt;- npx_selected |&gt;
+  dplyr::filter(
+    AssayType == &quot;assay&quot;
+  ) |&gt;
+  dplyr::group_by(
+    SampleID,
+    SampleLabel,
+    Condition,
+    MT_count,
+    Replicate,
+    Experiment,
+    Sample_role
+  ) |&gt;
+  dplyr::summarise(
+    total_proteins =
+      dplyr::n_distinct(OlinkID),
+
+    classifiable_proteins =
+      dplyr::n_distinct(
+        OlinkID[!is.na(AboveLOD)]
+      ),
+
+    proteins_above_lod =
+      dplyr::n_distinct(
+        OlinkID[AboveLOD %in% TRUE]
+      ),
+
+    proteins_below_lod =
+      dplyr::n_distinct(
+        OlinkID[AboveLOD %in% FALSE]
+      ),
+
+    missing_lod_classification =
+      total_proteins - classifiable_proteins,
+
+    percent_above_lod = dplyr::if_else(
+      classifiable_proteins &gt; 0,
+      100 * proteins_above_lod / classifiable_proteins,
+      NA_real_
+    ),
+
+    .groups = &quot;drop&quot;
+  ) |&gt;
+  dplyr::mutate(
+    Condition = factor(
+      Condition,
+      levels = c(
+        &quot;Medium&quot;,
+        &quot;Control&quot;,
+        &quot;TGF_beta&quot;
+      )
+    )
+  ) |&gt;
+  dplyr::arrange(
+    MT_count,
+    Condition,
+    Replicate
+  )
+
+sample_detection_summary</code></pre>
+<pre><code># A tibble: 17 × 13
+   SampleID      SampleLabel Condition MT_count Replicate Experiment Sample_role
+   &lt;chr&gt;         &lt;chr&gt;       &lt;fct&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;      
+ 1 MM_medium     Medium      Medium           0         1 &lt;NA&gt;       Medium_con…
+ 2 EX1_Con1_NC   1_MT_NC_Ex… Control          1         1 EX1        Conditione…
+ 3 EX1_Con2_NC   1_MT_NC_Ex… Control          1         2 EX1        Conditione…
+ 4 EX2_Con1_NC   1_MT_NC_Ex… Control          1         3 EX2        Conditione…
+ 5 EX2_Con2_NC   1_MT_NC_Ex… Control          1         4 EX2        Conditione…
+ 6 EX3_Cont_NC   1_MT_NC_Ex… Control          1         5 EX3        Conditione…
+ 7 EX1_Con1_TGF  1_MT_TGF_E… TGF_beta         1         1 EX1        Conditione…
+ 8 EX1_Cont_2_T… 1_MT_TGF_E… TGF_beta         1         2 EX1        Conditione…
+ 9 EX2_Con1_TGF  1_MT_TGF_E… TGF_beta         1         3 EX2        Conditione…
+10 EX2_Con2_TGF  1_MT_TGF_E… TGF_beta         1         4 EX2        Conditione…
+11 EX3_Cont_TGF  1_MT_TGF_E… TGF_beta         1         5 EX3        Conditione…
+12 s16MT_NC_CMM  6_MT_NC_1   Control          6         1 &lt;NA&gt;       Conditione…
+13 s26MT_NC_CMM  6_MT_NC_2   Control          6         2 &lt;NA&gt;       Conditione…
+14 s46MT_TGFCMM  6_MT_TGF_1  TGF_beta         6         1 &lt;NA&gt;       Conditione…
+15 s56MT_TGFCMM  6_MT_TGF_2  TGF_beta         6         2 &lt;NA&gt;       Conditione…
+16 s312MT_NCCMM  12_MT_NC    Control         12         1 &lt;NA&gt;       Conditione…
+17 s612MTTGFCMM  12_MT_TGF   TGF_beta        12         1 &lt;NA&gt;       Conditione…
+# ℹ 6 more variables: total_proteins &lt;int&gt;, classifiable_proteins &lt;int&gt;,
+#   proteins_above_lod &lt;int&gt;, proteins_below_lod &lt;int&gt;,
+#   missing_lod_classification &lt;int&gt;, percent_above_lod &lt;dbl&gt;</code></pre>
+<pre class="r"><code>plot_detection &lt;- sample_detection_summary |&gt;
+  dplyr::mutate(
+    Condition = factor(
+      Condition,
+      levels = c(
+        &quot;Medium&quot;,
+        &quot;Control&quot;,
+        &quot;TGF_beta&quot;
+      )
+    ),
+
+    MT_label = factor(
+      MT_count,
+      levels = c(0, 1, 6, 12),
+      labels = c(
+        &quot;0 MT&quot;,
+        &quot;1 MT&quot;,
+        &quot;6 MTs&quot;,
+        &quot;12 MTs&quot;
+      )
+    ),
+
+    SampleLabel = factor(
+      SampleLabel,
+      levels = SampleLabel
+    )
+  )
+
+protein_detection_plot &lt;- ggplot2::ggplot(
+  plot_detection,
+  ggplot2::aes(
+    x = SampleLabel,
+    y = percent_above_lod,
+    fill = Condition
+  )
+) +
+  ggplot2::geom_col(
+    width = 0.8
+  ) +
+  ggplot2::geom_text(
+    ggplot2::aes(
+      label = round(percent_above_lod, 1)
+    ),
+    vjust = -0.35,
+    size = 5.8
+  ) +
+  ggplot2::facet_grid(
+    ~ MT_label,
+    scales = &quot;free_x&quot;,
+    space = &quot;free_x&quot;
+  ) +
+  ggplot2::scale_fill_manual(
+    values = c(
+      &quot;Medium&quot; = &quot;grey60&quot;,
+      &quot;Control&quot; = &quot;#4C78A8&quot;,
+      &quot;TGF_beta&quot; = &quot;#E45756&quot;
+    ),
+    labels = c(
+      &quot;Medium&quot;,
+      &quot;Control&quot;,
+      &quot;TGF-β&quot;
+    )
+  ) +
+  ggplot2::scale_y_continuous(
+    breaks = seq(0, 100, by = 20),
+    limits = c(0, 105),
+    expand = ggplot2::expansion(
+      mult = c(0, 0)
+    )
+  ) +
+  ggplot2::labs(
+    title = &quot;Percentage of proteins above LOD per sample&quot;,
+    subtitle = &quot;Protein measurements classified using the assay-specific LOD method&quot;,
+    x = &quot;Sample&quot;,
+    y = &quot;Proteins above LOD (%)&quot;,
+    fill = &quot;Condition&quot;
+  ) +
+  ggplot2::theme_bw(
+    base_size = 13
+  ) +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(
+      size = 22,
+      face = &quot;bold&quot;
+    ),
+    plot.subtitle = ggplot2::element_text(
+      size = 16
+    ),
+    axis.title = ggplot2::element_text(
+      size = 16
+    ),
+    axis.text.y = ggplot2::element_text(
+      size = 16
+    ),
+    axis.text.x = ggplot2::element_text(
+      size = 15,
+      angle = 45,
+      hjust = 1
+    ),
+    strip.text = ggplot2::element_text(
+      size = 13,
+      face = &quot;bold&quot;
+    ),
+    legend.title = ggplot2::element_text(
+      size = 15
+    ),
+    legend.text = ggplot2::element_text(
+      size = 14
+    ),
+    panel.grid.major.x = ggplot2::element_blank()
+  )
+
+protein_detection_plot</code></pre>
+<p><img src="figure/01_import_olink.Rmd/percentage%20of%20proteins%20detected-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+<div id="upset-plot-of-proteins-above-lod" class="section level2">
+<h2>Upset plot of proteins above LOD</h2>
+<pre class="r"><code>#protein is above LOD in a group if it is above LOD in a strict majority of the samples in that group
+group_detection_summary &lt;- npx_selected_pca |&gt;
+  dplyr::group_by(
+    OlinkID,
+    Assay,
+    UniProt,
+    PCA_group
+  ) |&gt;
+  dplyr::summarise(
+    total_samples = dplyr::n_distinct(SampleID),
+
+    samples_above_lod = sum(
+      AboveLOD == TRUE,
+      na.rm = TRUE
+    ),
+
+    required_samples =
+      floor(total_samples / 2) + 1,
+
+    detected_in_group =
+      samples_above_lod &gt;= required_samples,
+
+    .groups = &quot;drop&quot;
+  )
+
+#inspect that the rule was applied to each group
+group_detection_summary |&gt;
+  dplyr::distinct(
+    PCA_group,
+    total_samples,
+    required_samples
+  ) |&gt;
+  dplyr::arrange(
+    total_samples,
+    PCA_group
+  )</code></pre>
+<pre><code># A tibble: 7 × 3
+  PCA_group     total_samples required_samples
+  &lt;chr&gt;                 &lt;int&gt;            &lt;dbl&gt;
+1 12 MT Control             1                1
+2 12 MT TGF-β               1                1
+3 Medium                    1                1
+4 6 MT Control              2                2
+5 6 MT TGF-β                2                2
+6 1 MT Control              5                3
+7 1 MT TGF-β                5                3</code></pre>
+<pre class="r"><code>#convert into an UpSet input table
+upset_detection_data &lt;- group_detection_summary |&gt;
+  dplyr::select(
+    OlinkID,
+    Assay,
+    UniProt,
+    PCA_group,
+    detected_in_group
+  ) |&gt;
+  tidyr::pivot_wider(
+    names_from = PCA_group,
+    values_from = detected_in_group,
+    values_fill = FALSE
+  )
+
+#specify the group order
+upset_groups &lt;- c(
+  &quot;Medium&quot;,
+  &quot;1 MT Control&quot;,
+  &quot;1 MT TGF-β&quot;,
+  &quot;6 MT Control&quot;,
+  &quot;6 MT TGF-β&quot;,
+  &quot;12 MT Control&quot;,
+  &quot;12 MT TGF-β&quot;
+)
+
+#create the UpSet plot
+
+olink_upset_plot &lt;- ComplexUpset::upset(
+  data = upset_detection_data,
+  intersect = upset_groups,
+
+  # Exclude proteins detected in none of the groups
+  min_degree = 1,
+
+  # Include intersections containing at least one protein
+  min_size = 1,
+
+  # Show every observed intersection
+  intersections = &quot;observed&quot;,
+
+  # An intersection means detected in exactly those groups
+  mode = &quot;distinct&quot;,
+
+  sort_sets = FALSE,
+  sort_intersections_by = c(
+    &quot;degree&quot;,
+    &quot;cardinality&quot;
+  ),
+
+  width_ratio = 0.25,
+
+  base_annotations = list(
+    &quot;Intersection size&quot; =
+      ComplexUpset::intersection_size(
+        counts = TRUE
+      )
+  )
+) +
+  patchwork::plot_annotation(
+    title = &quot;Overlap of proteins detected across experimental groups&quot;,
+    subtitle = paste(
+      &quot;Detected means above LOD in a strict majority&quot;,
+      &quot;of samples within each group&quot;
+    )
+  )</code></pre>
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.
+ℹ The deprecated feature was likely used in the ComplexUpset package.
+  Please report the issue at
+  &lt;https://github.com/krassowski/complex-upset/issues&gt;.
+This warning is displayed once per session.
+Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+generated.</code></pre>
+<pre class="r"><code>olink_upset_plot</code></pre>
+<p><img src="figure/01_import_olink.Rmd/UpSet%20plot%20for%20number%20of%20proteins%20above%20LOD%20in%20each%20group-1.png" alt="" width="1728" style="display: block; margin: auto;" /></p>
+</div>
+<div id="saving-output-file" class="section level2">
+<h2>Saving output file</h2>
+<pre class="r"><code># Create the output directory if it does not already exist
+# Save the selected, QC-annotated Olink dataset for downstream analysis.
+
+output_file &lt;- here::here(
+  &quot;output&quot;,
+  &quot;npx_selected_qc.rds&quot;
+)
+
+dir.create(
+  dirname(output_file),
+  showWarnings = FALSE,
+  recursive = TRUE
+)
+
+saveRDS(
+  npx_selected,
+  file = output_file
+)
+
+output_file</code></pre>
+<pre><code>[1] &quot;C:/Users/Ellen/OneDrive/Dokumente/olink-analysis/output/npx_selected_qc.rds&quot;</code></pre>
+<pre class="r"><code>file.exists(output_file)</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code>npx_selected_saved &lt;- readRDS(output_file)
+
+npx_selected_saved |&gt;
+  dplyr::summarise(
+    rows = dplyr::n(),
+    samples = dplyr::n_distinct(SampleID),
+    assays = dplyr::n_distinct(OlinkID)
+  )</code></pre>
+<pre><code># A tibble: 1 × 3
+   rows samples assays
+  &lt;int&gt;   &lt;int&gt;  &lt;int&gt;
+1 17578      17   1034</code></pre>
+<pre class="r"><code>c(
+  &quot;SampleID&quot;,
+  &quot;SampleLabel&quot;,
+  &quot;Condition&quot;,
+  &quot;MT_count&quot;,
+  &quot;Replicate&quot;,
+  &quot;Experiment&quot;,
+  &quot;Sample_role&quot;,
+  &quot;NPX&quot;,
+  &quot;Count&quot;,
+  &quot;LOD&quot;,
+  &quot;LODMethod&quot;,
+  &quot;AboveLOD&quot;,
+  &quot;SampleQC&quot;,
+  &quot;AssayQC&quot;
+) %in% names(npx_selected_saved)</code></pre>
+<pre><code> [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.6.1 (2026-06-24 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 26200)
+
+Matrix products: default
+  LAPACK version 3.12.1
+
+locale:
+[1] LC_COLLATE=English_Switzerland.utf8  LC_CTYPE=English_Switzerland.utf8   
+[3] LC_MONETARY=English_Switzerland.utf8 LC_NUMERIC=C                        
+[5] LC_TIME=English_Switzerland.utf8    
+
+time zone: Europe/Zurich
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] here_1.0.2         lubridate_1.9.5    forcats_1.0.1      stringr_1.6.0     
+ [5] dplyr_1.2.1        purrr_1.2.2        readr_2.2.0        tidyr_1.3.2       
+ [9] tibble_3.3.1       ggplot2_4.0.3      tidyverse_2.0.0    OlinkAnalyze_5.0.2
+[13] workflowr_1.7.2   
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6       xfun_0.60          bslib_0.11.0       ggrepel_0.9.8     
+ [5] processx_3.9.0     callr_3.8.0        tzdb_0.5.0         vctrs_0.7.3       
+ [9] tools_4.6.1        generics_0.1.4     ComplexUpset_1.3.3 parallel_4.6.1    
+[13] blob_1.3.0         pkgconfig_2.0.3    data.table_1.18.4  dbplyr_2.6.0      
+[17] RColorBrewer_1.1-3 S7_0.2.2           assertthat_0.2.1   lifecycle_1.0.5   
+[21] compiler_4.6.1     farver_2.1.2       git2r_0.36.2       brio_1.1.5        
+[25] getPass_0.2-4      httpuv_1.6.17      htmltools_0.5.9    sass_0.4.10       
+[29] yaml_2.3.12        crayon_1.5.3       later_1.4.8        pillar_1.11.1     
+[33] jquerylib_0.1.4    whisker_0.4.1      cachem_1.1.0       tidyselect_1.2.1  
+[37] digest_0.6.39      stringi_1.8.7      showtextdb_3.0     duckdb_1.5.4.3    
+[41] labeling_0.4.3     arrow_24.0.0       rprojroot_2.1.1    fastmap_1.2.0     
+[45] grid_4.6.1         colorspace_2.1-2   cli_3.6.6          magrittr_2.0.5    
+[49] patchwork_1.3.2    utf8_1.2.6         withr_3.0.3        scales_1.4.0      
+[53] promises_1.5.0     showtext_0.9-8     bit64_4.8.2        timechange_0.4.0  
+[57] rmarkdown_2.31     httr_1.4.8         sysfonts_0.8.9     bit_4.6.0         
+[61] otel_0.2.0         hms_1.1.4          evaluate_1.0.5     knitr_1.51        
+[65] testthat_3.3.2     rlang_1.3.0        Rcpp_1.1.2         glue_1.8.1        
+[69] DBI_1.3.0          vroom_1.7.1        rstudioapi_0.19.0  jsonlite_2.0.0    
+[73] R6_2.6.1           systemfonts_1.3.2  fs_2.1.0          </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
