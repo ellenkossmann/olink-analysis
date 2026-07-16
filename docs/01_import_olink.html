@@ -36,6 +36,8 @@
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -349,7 +351,13 @@ div.tocify {
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/ellenkossmann/olink-analysis">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -375,7 +383,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -386,8 +394,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -396,13 +404,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-07-15
+<strong>Last updated:</strong> 2026-07-16
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>olink-analysis/</code> <span
@@ -425,18 +433,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -527,13 +538,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrong4612c15">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomellenkossmannolinkanalysistreea9eb88ab599ae3e117312f991ad89d6699a29498targetblanka9eb88aa">
 <span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>Repository version:</strong> 4612c15
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/ellenkossmann/olink-analysis/tree/a9eb88ab599ae3e117312f991ad89d6699a29498" target="_blank">a9eb88a</a>
 </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrong4612c15"
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomellenkossmannolinkanalysistreea9eb88ab599ae3e117312f991ad89d6699a29498targetblanka9eb88aa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -542,7 +555,8 @@ and connecting the code version to the results is critical for
 reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version 4612c15.
+The results in this page were generated with repository version
+<a href="https://github.com/ellenkossmann/olink-analysis/tree/a9eb88ab599ae3e117312f991ad89d6699a29498" target="_blank">a9eb88a</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -557,6 +571,7 @@ were generated:
 </p>
 <pre><code>
 Ignored files:
+    Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/figure/
 
@@ -567,6 +582,9 @@ Untracked files:
     Untracked:  data/pre_quant.csv
     Untracked:  output/npx_selected_qc.rds
     Untracked:  output/npx_selected_with_lod_qc.rds
+
+Unstaged changes:
+    Modified:   analysis/01_import_olink.Rmd
 
 </code></pre>
 <p>
@@ -613,10 +631,27 @@ Message
 <tbody>
 <tr>
 <td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/ellenkossmann/olink-analysis/2d7fdfad72b1b866371838d6d2ec4060f317cab8/docs/01_import_olink.html" target="_blank">2d7fdfa</a>
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
 Rmd
 </td>
 <td>
-4612c15
+<a href="https://github.com/ellenkossmann/olink-analysis/blob/4612c15f066f658a378b9c5dc5adc42eead727b1/analysis/01_import_olink.Rmd" target="_blank">4612c15</a>
 </td>
 <td>
 ellenkossmann
@@ -791,7 +826,7 @@ npx_check &lt;- OlinkAnalyze::check_npx(
 * &quot;quant&quot;: &quot;NPX&quot; was selected. Options were &quot;NPX&quot; or &quot;PCNormalizedNPX&quot;.
 Please use `preferred_names` to select a different column name.
 duckdb is keeping downloaded extensions in a temporary directory:
-ℹ C:\Users\Ellen\AppData\Local\Temp\RtmpuYU8Ex/duckdb/extensions
+ℹ C:\Users\Ellen\AppData\Local\Temp\RtmpERZDGT/duckdb/extensions
 This is removed when the R session ends, so extensions are re-downloaded each session.
 ℹ To keep them, point `options(duckdb.extension_directory =)` or the `DUCKDB_EXTENSION_DIRECTORY` environment variable at a permanent path.
 1 assay exhibited assay QC warnings in column `AssayQC` of the dataset:
@@ -1861,6 +1896,44 @@ npx_distribution_full_check &lt;- OlinkAnalyze::check_npx(
 
 npx_distribution_full</code></pre>
 <p><img src="figure/01_import_olink.Rmd/NPX%20distribution%20plot%20per%20sample-1.png" alt="" width="1248" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-NPX-distribution-plot-per-sample-1">
+Past versions of "NPX distribution plot per sample-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-NPX-distribution-plot-per-sample-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ellenkossmann/olink-analysis/blob/2d7fdfad72b1b866371838d6d2ec4060f317cab8/docs/figure/01_import_olink.Rmd/NPX distribution plot per sample-1.png" target="_blank">2d7fdfa</a>
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#and then for the subset (only my samples)
 
 
@@ -1977,6 +2050,44 @@ Please use `preferred_names` to select a different column name.
 Adding another scale for fill, which will replace the existing scale.</code></pre>
 <pre class="r"><code>npx_distribution_selected</code></pre>
 <p><img src="figure/01_import_olink.Rmd/NPX%20distribution%20plot%20per%20sample-2.png" alt="" width="1248" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-NPX-distribution-plot-per-sample-2">
+Past versions of "NPX distribution plot per sample-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-NPX-distribution-plot-per-sample-2"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ellenkossmann/olink-analysis/blob/2d7fdfad72b1b866371838d6d2ec4060f317cab8/docs/figure/01_import_olink.Rmd/NPX distribution plot per sample-2.png" target="_blank">2d7fdfa</a>
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#Each box summarizes approximately 1,034 NPX values in one sample:
 ##the central line is the median NPX;
 ##the box represents the middle 50% of NPX values;
@@ -2022,6 +2133,43 @@ median_iqr_full &lt;- OlinkAnalyze::olink_qc_plot(
 
 median_iqr_full</code></pre>
 <p><img src="figure/01_import_olink.Rmd/median%20IQR%20outlier%20plot-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-median-IQR-outlier-plot-1">
+Past versions of "median IQR outlier plot-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-median-IQR-outlier-plot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ellenkossmann/olink-analysis/blob/2d7fdfad72b1b866371838d6d2ec4060f317cab8/docs/figure/01_import_olink.Rmd/median IQR outlier plot-1.png" target="_blank">2d7fdfa</a>
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#now the subset 
 
 # Create a plotting-only copy with readable sample labels.
@@ -2080,6 +2228,43 @@ median_iqr_selected &lt;- OlinkAnalyze::olink_qc_plot(
 
 median_iqr_selected</code></pre>
 <p><img src="figure/01_import_olink.Rmd/median%20IQR%20outlier%20plot-2.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-median-IQR-outlier-plot-2">
+Past versions of "median IQR outlier plot-2.png"
+</button>
+</p>
+<div id="fig-no-spaces-median-IQR-outlier-plot-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ellenkossmann/olink-analysis/blob/2d7fdfad72b1b866371838d6d2ec4060f317cab8/docs/figure/01_import_olink.Rmd/median IQR outlier plot-2.png" target="_blank">2d7fdfa</a>
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#everything within the dashed lines is not an outlier
 
 #inspect flagged samples: 
@@ -2216,6 +2401,43 @@ pca_pc1_pc2 &lt;- pca_pc1_pc2_list[[1]] +
 
 pca_pc1_pc2</code></pre>
 <p><img src="figure/01_import_olink.Rmd/PCA-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-PCA-1">
+Past versions of PCA-1.png
+</button>
+</p>
+<div id="fig-PCA-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ellenkossmann/olink-analysis/blob/2d7fdfad72b1b866371838d6d2ec4060f317cab8/docs/figure/01_import_olink.Rmd/PCA-1.png" target="_blank">2d7fdfa</a>
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#PC1 vs PC3 
 pca_pc1_pc3_list &lt;- OlinkAnalyze::olink_pca_plot(
   df = npx_selected_pca,
@@ -2245,6 +2467,43 @@ pca_pc1_pc3 &lt;- pca_pc1_pc3_list[[1]] +
 
 pca_pc1_pc3</code></pre>
 <p><img src="figure/01_import_olink.Rmd/PCA-2.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-PCA-2">
+Past versions of PCA-2.png
+</button>
+</p>
+<div id="fig-PCA-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ellenkossmann/olink-analysis/blob/2d7fdfad72b1b866371838d6d2ec4060f317cab8/docs/figure/01_import_olink.Rmd/PCA-2.png" target="_blank">2d7fdfa</a>
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>#PC2 vs PC3
 pca_pc2_pc3_list &lt;- OlinkAnalyze::olink_pca_plot(
   df = npx_selected_pca,
@@ -2274,6 +2533,43 @@ pca_pc2_pc3 &lt;- pca_pc2_pc3_list[[1]] +
 
 pca_pc2_pc3</code></pre>
 <p><img src="figure/01_import_olink.Rmd/PCA-3.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-PCA-3">
+Past versions of PCA-3.png
+</button>
+</p>
+<div id="fig-PCA-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ellenkossmann/olink-analysis/blob/2d7fdfad72b1b866371838d6d2ec4060f317cab8/docs/figure/01_import_olink.Rmd/PCA-3.png" target="_blank">2d7fdfa</a>
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>sample_detection_summary &lt;- npx_selected |&gt;
   dplyr::group_by(
     SampleID,
@@ -2452,8 +2748,48 @@ protein_detection_histogram &lt;- ggplot2::ggplot(
   ggplot2::theme_bw()
 
 protein_detection_histogram</code></pre>
-<p><img src="figure/01_import_olink.Rmd/Calculate%20protein%20detection%20frequency-1.png" alt="" width="672" style="display: block; margin: auto;" />
-## Percentage of proteins above LOD</p>
+<p><img src="figure/01_import_olink.Rmd/Calculate%20protein%20detection%20frequency-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-Calculate-protein-detection-frequency-1">
+Past versions of "Calculate protein detection frequency-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-Calculate-protein-detection-frequency-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ellenkossmann/olink-analysis/blob/2d7fdfad72b1b866371838d6d2ec4060f317cab8/docs/figure/01_import_olink.Rmd/Calculate protein detection frequency-1.png" target="_blank">2d7fdfa</a>
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="percentage-of-proteins-above-lod" class="section level2">
+<h2>Percentage of proteins above LOD</h2>
 <pre class="r"><code># Calculate protein detectability separately for each selected sample.
 #
 # Only protein assays are included.
@@ -2657,6 +2993,132 @@ protein_detection_plot &lt;- ggplot2::ggplot(
 
 protein_detection_plot</code></pre>
 <p><img src="figure/01_import_olink.Rmd/percentage%20of%20proteins%20detected-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-percentage-of-proteins-detected-1">
+Past versions of "percentage of proteins detected-1.png"
+</button>
+</p>
+<div id="fig-no-spaces-percentage-of-proteins-detected-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ellenkossmann/olink-analysis/blob/2d7fdfad72b1b866371838d6d2ec4060f317cab8/docs/figure/01_import_olink.Rmd/percentage of proteins detected-1.png" target="_blank">2d7fdfa</a>
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="number-of-proteins-above-lod" class="section level2">
+<h2>Number of Proteins above LOD</h2>
+<pre class="r"><code>protein_number_detection_plot &lt;- ggplot2::ggplot(
+  plot_detection,
+  ggplot2::aes(
+    x = SampleLabel,
+    y = proteins_above_lod,
+    fill = Condition
+  )
+) +
+  ggplot2::geom_col(
+    width = 0.8
+  ) +
+  ggplot2::geom_text(
+    ggplot2::aes(
+      label = proteins_above_lod
+    ),
+    vjust = -0.35,
+    size = 5.8
+  ) +
+  ggplot2::facet_grid(
+    ~ MT_label,
+    scales = &quot;free_x&quot;,
+    space = &quot;free_x&quot;
+  ) +
+  ggplot2::scale_fill_manual(
+    values = c(
+      &quot;Medium&quot; = &quot;grey60&quot;,
+      &quot;Control&quot; = &quot;#4C78A8&quot;,
+      &quot;TGF_beta&quot; = &quot;#E45756&quot;
+    ),
+    labels = c(
+      &quot;Medium&quot;,
+      &quot;Control&quot;,
+      &quot;TGF-β&quot;
+    )
+  ) +
+  ggplot2::scale_y_continuous(
+    breaks = scales::breaks_pretty(),
+    expand = ggplot2::expansion(
+      mult = c(0, 0.08)
+    )
+  ) +
+  ggplot2::labs(
+    title = &quot;Number of proteins above LOD per sample&quot;,
+    subtitle = &quot;Protein measurements classified using the assay-specific LOD method&quot;,
+    x = &quot;Sample&quot;,
+    y = &quot;Proteins above LOD&quot;,
+    fill = &quot;Condition&quot;
+  ) +
+  ggplot2::theme_bw(
+    base_size = 13
+  ) +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(
+      size = 22,
+      face = &quot;bold&quot;
+    ),
+    plot.subtitle = ggplot2::element_text(
+      size = 16
+    ),
+    axis.title = ggplot2::element_text(
+      size = 16
+    ),
+    axis.text.y = ggplot2::element_text(
+      size = 16
+    ),
+    axis.text.x = ggplot2::element_text(
+      size = 15,
+      angle = 45,
+      hjust = 1
+    ),
+    strip.text = ggplot2::element_text(
+      size = 13,
+      face = &quot;bold&quot;
+    ),
+    legend.title = ggplot2::element_text(
+      size = 15
+    ),
+    legend.text = ggplot2::element_text(
+      size = 14
+    ),
+    panel.grid.major.x = ggplot2::element_blank()
+  )
+
+protein_number_detection_plot</code></pre>
+<p><img src="figure/01_import_olink.Rmd/Number%20of%20Proteins%20above%20LOD%20in%20each%20group-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
 </div>
 <div id="upset-plot-of-proteins-above-lod" class="section level2">
 <h2>Upset plot of proteins above LOD</h2>
@@ -2782,6 +3244,46 @@ Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
 generated.</code></pre>
 <pre class="r"><code>olink_upset_plot</code></pre>
 <p><img src="figure/01_import_olink.Rmd/UpSet%20plot%20for%20number%20of%20proteins%20above%20LOD%20in%20each%20group-1.png" alt="" width="1728" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-no-spaces-UpSet-plot-for-number-of-proteins-above-LOD-in-each-group-1">
+Past versions of "UpSet plot for number of proteins above LOD in each
+group-1.png"
+</button>
+</p>
+<div
+id="fig-no-spaces-UpSet-plot-for-number-of-proteins-above-LOD-in-each-group-1"
+class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/ellenkossmann/olink-analysis/blob/2d7fdfad72b1b866371838d6d2ec4060f317cab8/docs/figure/01_import_olink.Rmd/UpSet plot for number of proteins above LOD in each group-1.png" target="_blank">2d7fdfa</a>
+</td>
+<td>
+ellenkossmann
+</td>
+<td>
+2026-07-15
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="saving-output-file" class="section level2">
 <h2>Saving output file</h2>
